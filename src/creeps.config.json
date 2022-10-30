@@ -1,0 +1,81 @@
+{
+    "Harvester": {
+        "name": "harvester",
+        "number": 3,
+        "body": [
+            "WORK",
+            "WORK",
+            "CARRY",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Harvester"
+        }
+    },
+    "Carrier": {
+        "name": "carrier",
+        "number": 2,
+        "body": [
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Carrier",
+            "targetIndex": 0
+        }
+    },
+    "Builder": {
+        "name": "builder",
+        "number": 1,
+        "body": [
+            "WORK",
+            "WORK",
+            "CARRY",
+            "CARRY",
+            "MOVE",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Builder"
+        }
+    },
+    "Upgrader": {
+        "name": "upgrader",
+        "number": 4,
+        "body": [
+            "WORK",
+            "WORK",
+            "WORK",
+            "WORK",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Upgrader"
+        }
+    },
+    "Repairer": {
+        "name": "repairer",
+        "number": 2,
+        "body": [
+            "WORK",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
+            "MOVE",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Repairer",
+            "targetIndex": "0"
+        }
+    }
+}
