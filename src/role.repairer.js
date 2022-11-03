@@ -8,7 +8,7 @@ export const repairer = {
             /**
              *  @description 需要修复的建筑物(不包含wall)并按照hits递增排序
              */
-            const targets = _creep.room.find(FIND_STRUCTURES, {
+            let targets = _creep.room.find(FIND_STRUCTURES, {
                 filter: object => {
                     return object.hits < object.hitsMax && object.structureType != STRUCTURE_WALL;
                 }

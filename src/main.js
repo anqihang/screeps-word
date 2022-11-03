@@ -5,6 +5,8 @@ import { builder } from './role.builder';
 import { upgrader } from './role.upgrader';
 import { repairer } from './role.repairer';
 import { carrier } from './role.carrier';
+import { customer } from './role.customer';
+import { mineral_harvester } from './role.mineral.harvester';
 //structure
 import { tower } from './structure.tower';
 //config
@@ -80,6 +82,7 @@ export const loop = function () {
         }
         return arr;
     }
+    //分配不同对象时需要的数组
     let arr_harvester = roleArray('Harvester');
     let arr_builder = roleArray('Builder');
     let arr_upgrader = roleArray('Upgrader');
@@ -92,16 +95,18 @@ export const loop = function () {
             return creeps[item].memory.role == role;
         })
     }
-
+    //增加role需要添加
     let num_harvester = filter('Harvester');
     let num_builder = filter('Builder');
     let num_upgrader = filter('Upgrader');
     let num_repairer = filter('Repairer');
     let num_carrier = filter('Carrier');
+    let num_customer = filter('Customer');
+    let num_mineral_harvester = filter('MineralHarvester');
     let num = {
-        num_harvester, num_builder, num_upgrader, num_repairer, num_carrier
+        num_harvester, num_builder, num_upgrader, num_repairer, num_carrier, num_customer, num_mineral_harvester
     };
-
+    //施工地
     const structre_site = Game.spawns['Spawn0'].room.find(FIND_CONSTRUCTION_SITES);
 
     //-
@@ -153,7 +158,7 @@ export const loop = function () {
         noCarrier = true;
     }
 
-    //获取carrier对象数组
+    //获取carrier对象数组--
     let carrierArrary = [];
     for (const key in creeps) {
         if (creeps[key].memory.role == 'Carrier') {
@@ -191,7 +196,18 @@ export const loop = function () {
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }
+        if (_creep.memory.role == 'Customer') {
+            customer.run({ _creep, _target: _creep.room.controller, _origin: _creep.room.storage, _method: 'upgradeController' });
+            if (_creep.ticksToLive < 100)
+                _creep.say(_creep.ticksToLive);
+        }
+        if (_creep.memory.role == 'MineralHarvester') {
+            mineral_harvester.run({ _creep })
+            if (_creep.ticksToLive < 100)
+                _creep.say(_creep.ticksToLive);
+        }
     }
+    // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
 
 
 }

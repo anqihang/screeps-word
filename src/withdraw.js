@@ -4,8 +4,8 @@ export const withdraw = {
     /**
      * @description 拿取
      * @param {*} _creep 
-     * @param {*} _container 
-     * @param {Boolean} isStorage
+     * @param {*} _container 拿取energy的对象 
+     * @param {Boolean} isStorage 是否是去storage拿能量
      * @returns {Boolean}
      */
     run: function ({ _creep, _container, isStorage }) {
@@ -40,9 +40,18 @@ export const withdraw = {
             //container都没energ而自身有一些nergy
         }
 
-        //
+        //if()
         if (!_creep.memory.working) {
-
+            if (_container) {
+                if (_creep.withdraw(_container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(_container, {
+                        visualizePathStyle: {
+                            stroke: "#ffffff",
+                            opacity: 1
+                        }
+                    })
+                }
+            }
             //拿取掉落的energy
             // if (energy.length > 0) {
             //     if (_creep.pickup(energy[0]) == ERR_NOT_IN_RANGE) {
@@ -50,8 +59,8 @@ export const withdraw = {
             //     }
             // }
 
-            //拿取container的energy
-            if (!haveEnergy) {
+            //拿取container的energy//10.31只有carrier能在container拿取
+            if (!haveEnergy && _creep.memory.role == 'Carrier') {
                 if (_creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers[0], {
                         visualizePathStyle: {

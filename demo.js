@@ -1,29 +1,29 @@
-let a = function () {
-    return {
-        aa: 1
-    }
-}
-let aa = a()
-let bb = a()
-aa.aa = 2;
-bb.aa = 3;
-console.log(aa);
-console.log(bb);
-
-let m = [1, 2, 4, 5, 6, 7];
-let t = m.every(element => {
-    return element > 3
-})
-console.log(t);
-
-let creep = ['re0', 're1'];
-let rea = true, reb = true;
-let rec = false;
-// let index0 = function () {
-//     return { index: 0 }
+// let a = function () {
+//     return {
+//         aa: 1
+//     }
 // }
-let repaire = false;
-let move = true;
+// let aa = a()
+// let bb = a()
+// aa.aa = 2;
+// bb.aa = 3;
+// console.log(aa);
+// console.log(bb);
+
+// let m = [1, 2, 4, 5, 6, 7];
+// let t = m.every(element => {
+//     return element > 3
+// })
+// console.log(t);
+
+// let creep = ['re0', 're1'];
+// let rea = true, reb = true;
+// let rec = false;
+// // let index0 = function () {
+// //     return { index: 0 }
+// // }
+// let repaire = false;
+// let move = true;
 // let index = index0().index;
 // let index0 = 1;
 // let index1 = 0;
@@ -61,28 +61,28 @@ let move = true;
 // }
 // re.run(creep[0]);
 // re1.run(creep[1]);
-// let hh = a
-let l = 1, ll = 2;
-function getDescendantProp(obj, desc) {
-    var arr = desc.split('.');
-    while (arr.length) {
-        obj = obj[arr.shift()];
-    }
-    return obj;
-}
+// // let hh = a
+// let l = 1, ll = 2;
+// function getDescendantProp(obj, desc) {
+//     var arr = desc.split('.');
+//     while (arr.length) {
+//         obj = obj[arr.shift()];
+//     }
+//     return obj;
+// }
 
-// var obj = { l, ll };
-// var propPath = "l"; // 例如返回 "a.b.c"
-// var result = getDescendantProp(obj, propPath);
-let json = {
-    "harvester": {
-        "body": [
-            "WORK"
-        ]
-    }
-}
-let stt = [WORK, CARRY, MOVE];
-let st = ['WORK', "CARRY"];
+// // var obj = { l, ll };
+// // var propPath = "l"; // 例如返回 "a.b.c"
+// // var result = getDescendantProp(obj, propPath);
+// let json = {
+//     "harvester": {
+//         "body": [
+//             "WORK"
+//         ]
+//     }
+// }
+// let stt = [WORK, CARRY, MOVE];
+// let st = ['WORK', "CARRY"];
 // function tov(str) {
 //     let r = [];
 //     for (const iterator of str) {
@@ -101,4 +101,8 @@ let st = ['WORK', "CARRY"];
 // let newstr = tov(st);
 // console.log(newstr);
 // console.log(JSON.stringify(st));
-Game.spawns['Spawn0'].room.createConstructionSite(STRUCTURE_ROAD);
+// Game.spawns['Spawn0'].room.createConstructionSite(STRUCTURE_ROAD);
+function a({ b = 1 }) {
+    console.log(b);
+}
+a({ b: 2 })

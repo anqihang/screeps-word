@@ -25,6 +25,10 @@
 
     - structure_tower
 
+> - 功能
+
+    - assignTarget为同类每个creep分配不同的目标
+
 ## 颜色标志
 
 > - 线路

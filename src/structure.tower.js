@@ -23,7 +23,7 @@ export const tower = {
             //工作模式选择
             if (targets_attack.length > 0) {
                 _structure.attack(targets_attack[0]);
-                Game.notify('你被攻击了', 0);
+                // Game.notify('你被攻击了', 0);
             }
             //else if (targets_heal.length) {
             //     _structure.heal(targets_heal[0]);

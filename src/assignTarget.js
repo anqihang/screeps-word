@@ -2,7 +2,7 @@ export const assignTarget = {
     /**
      * @description 给不同的creep分配不同的目标对象
      * @param {Array} targets structure_energy不working时的目标
-     * @param {Object} roleTarget   Memory.carryTarget目标index
+     * @param {Object} roleTarget  Memory.carryTarget目标index
      * @param {Array} roleArr 相应的creep对象数组
      */
     run: function ({ roleTarget, roleArr, targets }) {
@@ -19,9 +19,11 @@ export const assignTarget = {
             } else {
                 // if (_creep == roleArr[1])
                 //任务超过一个后重新分配
-                if (roleArr[0].memory.targetIndex == roleArr[1].memory.targetIndex) {
-                    roleArr[0].memory.targetIndex = 0;
-                    roleArr[1].memory.targetIndex = 1;
+                if (roleArr.length > 1) {
+                    if (roleArr[0].memory.targetIndex == roleArr[1].memory.targetIndex) {
+                        roleArr[0].memory.targetIndex = 0;
+                        roleArr[1].memory.targetIndex = 1;
+                    }
                 }
             }
             //任务完成后切换下标保证不会改变原来的目标

@@ -43,8 +43,10 @@ export const harvester = {
         if (noCarrier) {
             targets = structure_energy;
         }
-
-        if (harvest.run(_creep)) {
+        //所有energy矿【arr】
+        const source_energy = _creep.room.find(FIND_SOURCES);
+        //
+        if (harvest.run({ _creep, _target: source_energy })) {
             if (_creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 _creep.moveTo(targets[0], { visualizePahStyle: { stroke: '#fae16b', opacity: .6 } });
             }

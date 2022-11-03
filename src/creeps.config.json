@@ -1,11 +1,13 @@
 {
     "Harvester": {
         "name": "harvester",
-        "number": 3,
+        "number": 2,
         "body": [
             "WORK",
             "WORK",
+            "WORK",
             "CARRY",
+            "MOVE",
             "MOVE"
         ],
         "memory": {
@@ -20,6 +22,9 @@
             "CARRY",
             "CARRY",
             "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE",
             "MOVE"
         ],
@@ -36,6 +41,9 @@
             "WORK",
             "CARRY",
             "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE",
             "MOVE"
         ],
@@ -65,10 +73,14 @@
         "number": 2,
         "body": [
             "WORK",
+            "WORK",
             "CARRY",
             "CARRY",
             "CARRY",
             "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE",
             "MOVE",
             "MOVE"
@@ -77,5 +89,22 @@
             "role": "Repairer",
             "targetIndex": "0"
         }
+    },
+    "Customer": {
+        "name": "customer",
+        "number": 2,
+        "body": [
+            "WORK",
+            "WORK",
+            "CARRY",
+            "MOVE",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "Customer"
+        },
+        "target": "_creep.room.controller",
+        "origin": "_creep.room.storage",
+        "method": "upgradeController"
     }
 }
