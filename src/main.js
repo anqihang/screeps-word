@@ -102,9 +102,9 @@ export const loop = function () {
     let num_repairer = filter('Repairer');
     let num_carrier = filter('Carrier');
     let num_customer = filter('Customer');
-    let num_mineral_harvester = filter('MineralHarvester');
+    let num_mineralharvester = filter('MineralHarvester');
     let num = {
-        num_harvester, num_builder, num_upgrader, num_repairer, num_carrier, num_customer, num_mineral_harvester
+        num_harvester, num_builder, num_upgrader, num_repairer, num_carrier, num_customer, num_mineralharvester
     };
     //施工地
     const structre_site = Game.spawns['Spawn0'].room.find(FIND_CONSTRUCTION_SITES);

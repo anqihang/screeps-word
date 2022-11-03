@@ -106,5 +106,19 @@
         "target": "_creep.room.controller",
         "origin": "_creep.room.storage",
         "method": "upgradeController"
+    },
+    "MineralHarvester": {
+        "name": "mineralharvester",
+        "number": 1,
+        "body": [
+            "WORK",
+            "WORK",
+            "WORK",
+            "CARRY",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "MineralHarvester"
+        }
     }
 }
