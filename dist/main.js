@@ -495,7 +495,7 @@ const tower = {
 
 var Harvester = {
 	name: "harvester",
-	number: 2,
+	number: 3,
 	body: [
 		"WORK",
 		"WORK",
