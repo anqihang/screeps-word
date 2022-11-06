@@ -1,17 +1,21 @@
 {
     "Harvester": {
         "name": "harvester",
-        "number": 3,
+        "number": 2,
         "body": [
+            "WORK",
+            "WORK",
             "WORK",
             "WORK",
             "WORK",
             "CARRY",
             "MOVE",
+            "MOVE",
             "MOVE"
         ],
         "memory": {
-            "role": "Harvester"
+            "role": "Harvester",
+            "harvestIndex": 0
         }
     },
     "Carrier": {

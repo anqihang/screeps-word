@@ -14,6 +14,18 @@ import role_config from './creeps.config.json';
 
 Memory.carryTarget = "";
 Memory.repairTarget = "";
+//所有房间的energy矿
+// for (const key in Game.rooms) {
+//     let sources = Game.rooms[key].find(FIND_SOURCES);
+
+// }
+//存储energy的contaienr
+let container_energy = Game.rooms['W41S22'].lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
+    return item.structureType == 'container';
+})
+//
+//W41S22房间的矿
+let mineral_k = Game.rooms['W41S22'].find(FIND_MINERALS);
 
 /**
      * 将字符串变为变量
@@ -64,7 +76,11 @@ export const loop = function () {
 
     let creeps = Game.creeps;
     let structures = Game.structures;
-
+    for (const key in Memory.creeps) {
+        if (!creeps[key]) {
+            delete Memory.creeps[key]
+        }
+    }
     //分配structure任务
     for (const key in structures) {
         let structure = structures[key];
@@ -116,12 +132,15 @@ export const loop = function () {
 
         if (getVerb(num, `num_${role.name}`).length < role.number) {
             let index = Math.floor(Math.random() * 4);
-            if (role.name != 'builder') {
-
+            if (role.name != 'builder' && role.name != 'mineralharvester') {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-            } else if (structre_site.length > 0) {
+                for (const index in arr_harvester) {
+                    arr_harvester[index].memory.harvestIndex = index % 2;
+                }
+            } else if (structre_site.length > 0 && role.name == 'builder') {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-
+            } else if (role.name == 'mineralharvester' && mineral_k.mineralAmount > 0) {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
         }
     }
@@ -172,7 +191,7 @@ export const loop = function () {
     for (const key in creeps) {
         let _creep = creeps[key];
         if (_creep.memory.role == 'Harvester') {
-            harvester.run({ _creep, noCarrier });
+            harvester.run({ _creep, noCarrier, _container: container_energy });
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }
@@ -202,7 +221,7 @@ export const loop = function () {
                 _creep.say(_creep.ticksToLive);
         }
         if (_creep.memory.role == 'MineralHarvester') {
-            mineral_harvester.run({ _creep })
+            mineral_harvester.run({ _creep, _mineral: mineral_k })
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }

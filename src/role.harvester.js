@@ -5,9 +5,10 @@ export const harvester = {
     /**
      * @description 采集者
      * @param {*} _creep 
-     * @param {Boolean} noCarrier 没有carrier了
+     * @param {Array} _container 交互的container (必填)
+     * @param {Boolean} noCarrier 没有carrier了 (选填)
      */
-    run: function ({ _creep, noCarrier }) {
+    run: function ({ _creep, noCarrier, _container }) {
 
         //需要energy的建筑物【arr】，并按照已有energy的递增排序---没有container时替换targets
         const structure_energy = _creep.room.find(FIND_STRUCTURES, {
@@ -19,26 +20,28 @@ export const harvester = {
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
         //----------------------------------//
-        // 需要energy的container建筑【arr】
+        //--- 需要energy的container建筑【arr】
         let targets = _creep.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        //----------------------------------//
-        //指定位置范围内的container【arr】
-        const containers = _creep.room.lookAtArea(23, 30, 24, 32, true).filter(item => {
-            return item.type == 'structure'
-        });
         //
-        try {
-            const tar = containers.filter(item => {
-                return item.structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            })
-        } catch (error) {
-            // console.log(error.message);
+        let source = _creep.room.find(FIND_SOURCES);
+        let cons = [];
+        for (const item of source) {
+            cons.push(_creep.room.lookForAtArea(LOOK_STRUCTURES, item.pos.y - 2, item.pos.x - 2, item.pos.y + 2, item.pos.x + 2, true).filter(item => item.structure.structureType == 'container')[0])
         }
+
+
+        //------------------------
+        // //获取指定位置的container(存储energy)
+        // let container = _creep.room.lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
+        //     return item.structureType == 'container';
+        // })
+        //----------------------------------//
+        targets = _container;
         //没有carrier后harvester开始运输
         if (noCarrier) {
             targets = structure_energy;
@@ -53,27 +56,3 @@ export const harvester = {
         }
     }
 }
-// module.exports = harvester;
-// tar[0].structure
-
-// [
-//     {
-//         "type": "structure",
-//         "structure": {
-//             "id": "634ef405f1b4e3800b8a5808",
-//             "room": {
-//                 "name": "W41S22", "energyAvailable": 550,
-//                 "energyCapacityAvailable": 550,
-//                 "visual": { "roomName": "W41S22" }
-//             },
-//             "pos": { "x": 30, "y": 24, "roomName": "W41S22" },
-//             "store": { "energy": 151 },
-//             "storeCapacity": 2000,
-//             "ticksToDecay": 205,
-//             "hits": 154700,
-//             "hitsMax": 250000,
-//             "structureType": "container"
-//         },
-//         "x": 30, "y": 24
-//     }
-// ]

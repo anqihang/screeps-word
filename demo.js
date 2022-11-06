@@ -102,7 +102,8 @@
 // console.log(newstr);
 // console.log(JSON.stringify(st));
 // Game.spawns['Spawn0'].room.createConstructionSite(STRUCTURE_ROAD);
-function a({ b = 1 }) {
-    console.log(b);
-}
-a({ b: 2 })
+// function a({ b = 1 }) {
+//     console.log(b);
+// }
+// a({ b: 2 })
+[[{ "type": "structure", "structure": { "id": "6363db3d1b7320b697ce4e5a", "room": { "name": "W41S22", "energyAvailable": 2300, "energyCapacityAvailable": 2300, "visual": { "roomName": "W41S22" } }, "pos": { "x": 29, "y": 23, "roomName": "W41S22" }, "store": {}, "storeCapacity": 2000, "ticksToDecay": 6, "hits": 250000, "hitsMax": 250000, "structureType": "container" }, "x": 29, "y": 23 }], [{ "type": "structure", "structure": { "id": "6367748c30a5ef2b469abaf4", "room": { "name": "W41S22", "energyAvailable": 2300, "energyCapacityAvailable": 2300, "visual": { "roomName": "W41S22" } }, "pos": { "x": 28, "y": 36, "roomName": "W41S22" }, "store": {}, "storeCapacity": 2000, "ticksToDecay": 169, "hits": 250000, "hitsMax": 250000, "structureType": "container" }, "x": 28, "y": 36 }]]

@@ -23,7 +23,16 @@ export const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
+        //根据距离排序
+        structure_energy.sort((a, b) => {
+            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+        })
 
+        //storage
+        let storage = _creep.room.find(FIND_STRUCTURES, {
+            filter: item => item.structureType == STRUCTURE_STORAGE
+        });;
         // storage(其他建筑的energy都已满)
         if (structure_energy.length == 0) {
             structure_energy = _creep.room.find(FIND_STRUCTURES, {
@@ -61,15 +70,29 @@ export const carrier = {
 
         //if()
         if (withdraw.run({ _creep, isStorage })) {
-
-            if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                _creep.moveTo(structure_energy[_creep.memory.targetIndex], {
-                    visualizePathStyle: {
-                        stroke: '#11a8cd',
-                        opacity: .6
-                    }
-                });
+            if (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0) {
+                // for (const resourceType in _creep.carry) {
+                if (_creep.transfer(storage[_creep.memory.targetIndex], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(storage[_creep.memory.targetIndex], {
+                        visualizePathStyle: {
+                            stroke: '#11a8cd',
+                            opacity: .6
+                        }
+                    })
+                }
+                // }
             }
+            else {
+                if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(structure_energy[_creep.memory.targetIndex], {
+                        visualizePathStyle: {
+                            stroke: '#11a8cd',
+                            opacity: .6
+                        }
+                    });
+                }
+            }
+
         }
 
     }

@@ -1,4 +1,6 @@
 import { harvest } from './harvest';
+import { withdraw } from './withdraw';
+
 export const upgrader = {
     run: function (_creep) {
         //所有energy矿【arr】
@@ -8,6 +10,11 @@ export const upgrader = {
                 _creep.moveTo(_creep.room.controller);
             }
         }
+        // if (window.run({ _creep,_container:_creep.room.storage })) {
+        //     if (_creep.upgradeController(_creep.room.controller) == ERR_NOT_IN_RANGE) {
+        //         _creep.moveTo(_creep.room.controller);
+        //     }
+        // }
     }
 }
 
