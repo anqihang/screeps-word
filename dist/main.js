@@ -790,7 +790,7 @@ const loop = function () {
                 }
             } else if (structre_site.length > 0 && role.name == 'builder') {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-            } else if (role.name == 'mineralharvester' && mineral_k.mineralAmount > 0) {
+            } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
         }
