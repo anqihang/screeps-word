@@ -102,7 +102,7 @@ const withdraw = {
          */
         let containers_energy = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
-                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_ENERGY) > 300;
             }
         });
         /**
@@ -317,7 +317,10 @@ const repairer = {
                 });
             }
             targets.sort((a, b) => a.hits - b.hits);
-
+            targets.sort((a, b) => {
+                return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                    Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+            });
             if (targets.length > 0) {
 
                 // const creeps = Game.spawns['Spawn0'].room.find(FIND_CREEPS).filter(item => {

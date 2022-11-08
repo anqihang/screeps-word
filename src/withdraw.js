@@ -15,7 +15,7 @@ export const withdraw = {
          */
         let containers_energy = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
-                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_ENERGY) > 300;
             }
         });
         /**
