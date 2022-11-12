@@ -39,7 +39,7 @@
     },
     "Builder": {
         "name": "builder",
-        "number": 1,
+        "number": 2,
         "body": [
             "WORK",
             "WORK",
@@ -123,6 +123,27 @@
         ],
         "memory": {
             "role": "MineralHarvester"
+        }
+    },
+    "OutHarvester": {
+        "name": "outharvester",
+        "number": 1,
+        "body": [
+            "WORK",
+            "WORK",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
+            "MOVE",
+            "MOVE",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "OutHarvester"
         }
     }
 }

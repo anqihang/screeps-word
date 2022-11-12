@@ -105,12 +105,12 @@ export const withdraw = {
             else if (!isStorage) {
 
                 //storage
-                const storage = _creep.room.find(FIND_STRUCTURES, {
+                let storage = _creep.room.find(FIND_STRUCTURES, {
                     filter: item => item.structureType == STRUCTURE_STORAGE
                 });
-
-                if (_creep.withdraw(storage[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    _creep.moveTo(storage[0], {
+                storage = Game.rooms['W41S22'].storage;
+                if (_creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(storage, {
                         visualizePathStyle: {
                             stroke: "#ffffff",
                             opacity: 1

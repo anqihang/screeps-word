@@ -19,9 +19,11 @@ export const repairer = {
                     filter: item => {
                         return item.hits < item.hitsMax && item.structureType == STRUCTURE_WALL;
                     }
-                })
+                });
             }
+            //按照hits递增排序
             targets.sort((a, b) => a.hits - b.hits);
+            //按照距离远近排序
             targets.sort((a, b) => {
                 return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
                     Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)

@@ -5,7 +5,7 @@ const harvest = {
     /** 
      * @param {*} _creep (必填)
      * @param {Number} energy_index energy矿的序号 (选填)
-     * @param {Array} _target energy矿数组 (必填)
+     * @param {Array} _target energy矿或mineral矿数组 (必填)
      * @returns {Boolean}
     */
     // harvesting: true,
@@ -49,7 +49,7 @@ const harvester = {
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
         //----------------------------------//
-        //--- 需要energy的container建筑【arr】
+        //--- 存放energy的container建筑【arr】
         let targets = _creep.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -62,8 +62,6 @@ const harvester = {
         for (const item of source) {
             cons.push(_creep.room.lookForAtArea(LOOK_STRUCTURES, item.pos.y - 2, item.pos.x - 2, item.pos.y + 2, item.pos.x + 2, true).filter(item => item.structure.structureType == 'container')[0]);
         }
-
-
         //------------------------
         // //获取指定位置的container(存储energy)
         // let container = _creep.room.lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
@@ -192,12 +190,12 @@ const withdraw = {
             else if (!isStorage) {
 
                 //storage
-                const storage = _creep.room.find(FIND_STRUCTURES, {
+                let storage = _creep.room.find(FIND_STRUCTURES, {
                     filter: item => item.structureType == STRUCTURE_STORAGE
                 });
-
-                if (_creep.withdraw(storage[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    _creep.moveTo(storage[0], {
+                storage = Game.rooms['W41S22'].storage;
+                if (_creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(storage, {
                         visualizePathStyle: {
                             stroke: "#ffffff",
                             opacity: 1
@@ -224,7 +222,14 @@ const builder = {
             /**
              * @description 施工工地并按照所需energy的多少递增排序
              */
-            let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            // let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            //所有房间的是施工地
+            let construction = [];
+            for (const key in Game.rooms) {
+                construction.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES));
+            }
+            // console.log(construction.length);
+            // construction = Game.rooms['W41S23'].find(FIND_CONSTRUCTION_SITES);
             // construction.sort((a, b) => a.progressTotal - b.progressTotal);
             if (construction.length) {
                 if (_creep.build(construction[0]) == ERR_NOT_IN_RANGE) {
@@ -316,7 +321,9 @@ const repairer = {
                     }
                 });
             }
+            //按照hits递增排序
             targets.sort((a, b) => a.hits - b.hits);
+            //按照距离远近排序
             targets.sort((a, b) => {
                 return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
                     Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
@@ -367,11 +374,7 @@ const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        //根据距离排序
-        structure_energy.sort((a, b) => {
-            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        });
+
 
         //storage
         let storage = _creep.room.find(FIND_STRUCTURES, {
@@ -432,6 +435,10 @@ const carrier = {
                             stroke: '#11a8cd',
                             opacity: .6
                         }
+                    });//根据距离排序
+                    structure_energy.sort((a, b) => {
+                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
                     });
                 }
             }
@@ -443,12 +450,12 @@ const carrier = {
 
 const customer = {
     /**
-     * 
+     * @description 自定义creep
      * @param {*} param0 
      */
-    run: function ({ _creep, _target, _origin, _method }) {
+    run: function ({ _creep, _target, _origin, _method, _resource }) {
         if (withdraw.run({ _creep, _container: _origin })) {
-            if (_creep[_method](_target) == ERR_NOT_IN_RANGE) {
+            if (_creep[_method](_target, _resource) == ERR_NOT_IN_RANGE) {
                 _creep.moveTo(_target, {
                     visualizePathStyle: {
                         stroke: "#000000",
@@ -486,6 +493,71 @@ const mineral_harvester = {
         if (harvest.run({ _creep, _target: (_mineral || mineral) })) {
             if (_creep.transfer(container_k[0], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
                 _creep.moveTo(container_k[0], { visualizePahStyle: { stroke: '#fae16b', opacity: .6 } });
+            }
+        }
+    }
+};
+
+const attacker = {
+    run: function ({ _creep }) {
+        let enemies = _creep.room.find(FIND_HOSTILE_CREEPS);
+        if (!Game.creeps.attack) {
+            Game.spawns['Spawn0'].spawnCreep([ATTACK, ATTACK, MOVE, MOVE], 'attack');
+        }
+        if (Game.creeps.attack.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
+            Game.creeps.attack.moveTo(enemies[0]);
+        }
+    }
+};
+
+const claimer = {
+    run: function ({ _creep }) {
+        // const creep = Game.creeps['claimer'];
+        //要占领的房间
+        const room = Game.rooms['W41S23'];
+        //如果不存在就前往房间
+        if (!room) {
+            _creep.moveTo(new RoomPosition(25, 25, 'W41S23'));
+        } else {
+            //已经进入新房间
+            if (_creep.claimController(room.controller) == ERR_NOT_IN_RANGE) {
+                _creep.moveTo(room.controller, {
+                    visualizePathStyle: {
+                        stroke: '#b99cfb',
+                        opacity: .8
+                    }
+                });
+            }
+        }
+    }
+};
+
+const outHarvester = {
+    run: function ({ _creep, _room }) {
+        if (harvest.run({ _creep, _target: _room.find(FIND_SOURCES_ACTIVE) })) {
+            if (_creep.transfer(Game.rooms['W41S22'].storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                // _creep.moveTo(Game.rooms['W41S22'].storage, {
+                //     visualPathStyle: {
+                //         stroke: '#fbe679',
+                //         opacity: .3
+                //     }
+                // });
+                if (_creep.room.name == 'W41S23') {
+                    _creep.moveByPath(Memory.W41S23_energyTotop);
+                } else {
+                    _creep.moveTo(Game.rooms['W41S22'].storage, {
+                        visualPathStyle: {
+                            stroke: '#fbe679',
+                            opacity: .3
+                        }
+                    });
+                }
+                let road_repair = _creep.pos.findInRange(FIND_STRUCTURES, 3, {
+                    filter: item => item.structureType == STRUCTURE_ROAD && item.hits < item.hitsMax
+                });
+                if (road_repair) {
+                    _creep.repair(road_repair[0]);
+                }
             }
         }
     }
@@ -570,7 +642,7 @@ var Carrier = {
 };
 var Builder = {
 	name: "builder",
-	number: 1,
+	number: 2,
 	body: [
 		"WORK",
 		"WORK",
@@ -656,6 +728,27 @@ var MineralHarvester = {
 		role: "MineralHarvester"
 	}
 };
+var OutHarvester = {
+	name: "outharvester",
+	number: 1,
+	body: [
+		"WORK",
+		"WORK",
+		"CARRY",
+		"CARRY",
+		"CARRY",
+		"CARRY",
+		"CARRY",
+		"CARRY",
+		"MOVE",
+		"MOVE",
+		"MOVE",
+		"MOVE"
+	],
+	memory: {
+		role: "OutHarvester"
+	}
+};
 var role_config = {
 	Harvester: Harvester,
 	Carrier: Carrier,
@@ -663,7 +756,8 @@ var role_config = {
 	Upgrader: Upgrader,
 	Repairer: Repairer,
 	Customer: Customer,
-	MineralHarvester: MineralHarvester
+	MineralHarvester: MineralHarvester,
+	OutHarvester: OutHarvester
 };
 
 Memory.carryTarget = "";
@@ -677,6 +771,10 @@ Memory.repairTarget = "";
 let container_energy = Game.rooms['W41S22'].lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
     return item.structureType == 'container';
 });
+//缓存的路径
+let path = Game.rooms['W41S23'].findPath(new RoomPosition(35, 42, 'W41S23'), new RoomPosition(23, 0, 'W41S23'));
+path = Room.serializePath(path);
+Memory.W41S23_energyTotop = '3541111188888888888811111111111111181111211111';
 //
 //W41S22房间的矿
 let mineral_k = Game.rooms['W41S22'].find(FIND_MINERALS);
@@ -713,9 +811,9 @@ function tov(str) {
     return r;
 }
 
-//原型-切换目标对象
+//原型方法-------------------------------------------------------
+//原型-切换目标对象(self-role对象数组)
 Creep.prototype.switchTarget = function (self) {
-
     if (self.memory.targetIndex == 0) {
         self.memory.targetIndex += 1;
     } else if (self.memory.targetIndex == 1) {
@@ -723,13 +821,24 @@ Creep.prototype.switchTarget = function (self) {
     }
     // console.log(1, self, self.memory.targetIndex);
 };
+//creep的被攻击发送生成attack方法
+Creep.prototype.wasAttacked = function ({ _creep }) {
+    if (_creep.hits < _creep.hitsMax) {
+        attacker.run({ _creep });
+    }
+};
 
+let creepsL;
 
-//loop主函数
+//loop主函数----------------------------------------------------------------
 const loop = function () {
-
+    //兑换pielx
+    if (Game.cpu.bucket == 10000) {
+        Game.cpu.generatePixel();
+    }
     let creeps = Game.creeps;
     let structures = Game.structures;
+    //检索Memory删除没用的数据
     for (const key in Memory.creeps) {
         if (!creeps[key]) {
             delete Memory.creeps[key];
@@ -742,7 +851,7 @@ const loop = function () {
             tower.run(structure, 15);
         }
     }
-    //统计不同类型creep的对象数组
+    //统计不同类型creep的对象数组方法
     function roleArray(role) {
         let arr = [];
         for (const key in creeps) {
@@ -752,14 +861,14 @@ const loop = function () {
         }
         return arr;
     }
-    //分配不同对象时需要的数组
+    //分配不同目标对象时需要的role对象数组
     let arr_harvester = roleArray('Harvester');
     roleArray('Builder');
     roleArray('Upgrader');
     let arr_repairer = roleArray('Repairer');
     let arr_carrier = roleArray('Carrier');
 
-    //统计不同种类creep的名字数组【arr】
+    //统计不同种类creep的名字数组(用于数量计算)【arr】
     function filter(role) {
         return Object.keys(creeps).filter(item => {
             return creeps[item].memory.role == role;
@@ -773,28 +882,35 @@ const loop = function () {
     let num_carrier = filter('Carrier');
     let num_customer = filter('Customer');
     let num_mineralharvester = filter('MineralHarvester');
+    let num_outharvester = filter('OutHarvester');
     let num = {
-        num_harvester, num_builder, num_upgrader, num_repairer, num_carrier, num_customer, num_mineralharvester
+        num_harvester, num_builder, num_upgrader, num_repairer,
+        num_carrier, num_customer, num_mineralharvester, num_outharvester
     };
     //施工地
-    const structre_site = Game.spawns['Spawn0'].room.find(FIND_CONSTRUCTION_SITES);
-
-    //-
+    const structure_site = Game.rooms['W41S23'].find(FIND_CONSTRUCTION_SITES);
+    // let structure_site_all = Game.constructionSites;
+    // console.log(JSON.stringify(structure_site_all));
     //根据config生成creep
-    for (const key in role_config) {
-        let role = role_config[key];
-
-        if (getVerb(num, `num_${role.name}`).length < role.number) {
-            let index = Math.floor(Math.random() * 4);
-            if (role.name != 'builder' && role.name != 'mineralharvester') {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-                for (const index in arr_harvester) {
-                    arr_harvester[index].memory.harvestIndex = index % 2;
+    if (Object.keys(creeps).length != creepsL) {
+        creepsL = Object.keys(creeps).length;
+        for (const key in role_config) {
+            let role = role_config[key];
+            if (getVerb(num, `num_${role.name}`).length < role.number) {
+                let index = Math.floor(Math.random() * 4);
+                if (role.name != 'builder' && role.name != 'mineralharvester') {
+                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+                    //生成新的harvester时给所有harester分配index
+                    if (role.name == 'carrier') {
+                        for (const index in arr_harvester) {
+                            arr_harvester[index].memory.harvestIndex = index % 2;
+                        }
+                    }
+                } else if (structure_site.length > 0 && role.name == 'builder') {
+                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+                } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
+                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
                 }
-            } else if (structre_site.length > 0 && role.name == 'builder') {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-            } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
         }
     }
@@ -824,7 +940,7 @@ const loop = function () {
     //     let name = Math.floor(Math.random() * 4);
     //     Game.spawns['Spawn0'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE], `upgrader${name}`, { memory: { role: 'Upgrader' } });
     // }
-
+    //#endregion
     //判断harvester是否担任运输任务
     let noCarrier = false;
     if (num_carrier.length == 0 && Game.spawns['Spawn0'].room.energyAvailable <= 300) {
@@ -832,18 +948,19 @@ const loop = function () {
     }
 
     //获取carrier对象数组--
-    let carrierArrary = [];
-    for (const key in creeps) {
-        if (creeps[key].memory.role == 'Carrier') {
-            carrierArrary.push(creeps[key]);
-        }
-    }
+    // let carrierArrary = [];
+    // for (const key in creeps) {
+    //     if (creeps[key].memory.role == 'Carrier') {
+    //         carrierArrary.push(creeps[key]);
+    //     }
+    // }
 
 
 
     //分配creep任务
     for (const key in creeps) {
         let _creep = creeps[key];
+        _creep.wasAttacked({ _creep });
         if (_creep.memory.role == 'Harvester') {
             harvester.run({ _creep, noCarrier, _container: container_energy });
             if (_creep.ticksToLive < 100)
@@ -871,6 +988,7 @@ const loop = function () {
         }
         if (_creep.memory.role == 'Customer') {
             customer.run({ _creep, _target: _creep.room.controller, _origin: _creep.room.storage, _method: 'upgradeController' });
+
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }
@@ -879,9 +997,16 @@ const loop = function () {
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }
+        if (_creep.memory.role == 'Claimer') {
+            claimer.run({ _creep });
+        }
+        if (_creep.memory.role == 'OutHarvester') {
+            outHarvester.run({ _creep, _room: Game.rooms['W41S23'] });
+        }
     }
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
 
+    // console.log(Game.rooms['W41S23']);
 
 };
 

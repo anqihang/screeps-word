@@ -11,7 +11,14 @@ export const builder = {
             /**
              * @description 施工工地并按照所需energy的多少递增排序
              */
-            let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            // let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            //所有房间的是施工地
+            let construction = [];
+            for (const key in Game.rooms) {
+                construction.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES))
+            }
+            // console.log(construction.length);
+            // construction = Game.rooms['W41S23'].find(FIND_CONSTRUCTION_SITES);
             // construction.sort((a, b) => a.progressTotal - b.progressTotal);
             if (construction.length) {
                 if (_creep.build(construction[0]) == ERR_NOT_IN_RANGE) {

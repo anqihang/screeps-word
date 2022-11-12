@@ -20,7 +20,7 @@ export const harvester = {
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
         //----------------------------------//
-        //--- 需要energy的container建筑【arr】
+        //--- 存放energy的container建筑【arr】
         let targets = _creep.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -33,8 +33,6 @@ export const harvester = {
         for (const item of source) {
             cons.push(_creep.room.lookForAtArea(LOOK_STRUCTURES, item.pos.y - 2, item.pos.x - 2, item.pos.y + 2, item.pos.x + 2, true).filter(item => item.structure.structureType == 'container')[0])
         }
-
-
         //------------------------
         // //获取指定位置的container(存储energy)
         // let container = _creep.room.lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {

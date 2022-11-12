@@ -23,11 +23,7 @@ export const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        //根据距离排序
-        structure_energy.sort((a, b) => {
-            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        })
+
 
         //storage
         let storage = _creep.room.find(FIND_STRUCTURES, {
@@ -89,7 +85,11 @@ export const carrier = {
                             stroke: '#11a8cd',
                             opacity: .6
                         }
-                    });
+                    });//根据距离排序
+                    structure_energy.sort((a, b) => {
+                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+                    })
                 }
             }
 

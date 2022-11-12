@@ -3,7 +3,7 @@ export const harvest = {
     /** 
      * @param {*} _creep (必填)
      * @param {Number} energy_index energy矿的序号 (选填)
-     * @param {Array} _target energy矿数组 (必填)
+     * @param {Array} _target energy矿或mineral矿数组 (必填)
      * @returns {Boolean}
     */
     // harvesting: true,
