@@ -23,10 +23,10 @@ Memory.repairTarget = "";
 //     let sources = Game.rooms[key].find(FIND_SOURCES);
 
 // }
-//存储energy的contaienr
-let container_energy = Game.rooms['W41S22'].lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
-    return item.structureType == 'container';
-})
+// ---------------------存储energy的contaienr
+// let container_energy = Game.rooms['W41S22'].lookForAt(LOOK_STRUCTURES, 29, 23).filter(item => {
+//     return item.structureType == 'container';
+// })
 //缓存的路径
 let path = Game.rooms['W41S23'].findPath(new RoomPosition(35, 42, 'W41S23'), new RoomPosition(23, 0, 'W41S23'));
 path = Room.serializePath(path);
@@ -148,28 +148,28 @@ export const loop = function () {
     // let structure_site_all = Game.constructionSites;
     // console.log(JSON.stringify(structure_site_all));
     //根据config生成creep
-    if (Object.keys(creeps).length != creepsL) {
-        creepsL = Object.keys(creeps).length;
-        for (const key in role_config) {
-            let role = role_config[key];
-            if (getVerb(num, `num_${role.name}`).length < role.number) {
-                let index = Math.floor(Math.random() * 4);
-                if (role.name != 'builder' && role.name != 'mineralharvester') {
-                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-                    //生成新的harvester时给所有harester分配index
-                    if (role.name == 'carrier') {
-                        for (const index in arr_harvester) {
-                            arr_harvester[index].memory.harvestIndex = index % 2;
-                        }
+    // if (Object.keys(creeps).length != creepsL) {
+    //     creepsL = Object.keys(creeps).length;
+    for (const key in role_config) {
+        let role = role_config[key];
+        if (getVerb(num, `num_${role.name}`).length < role.number) {
+            let index = Math.floor(Math.random() * 4);
+            if (role.name != 'builder' && role.name != 'mineralharvester') {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+                //生成新的harvester时给所有harester分配index
+                if (role.name == 'carrier') {
+                    for (const index in arr_harvester) {
+                        arr_harvester[index].memory.targetIndex = index % 2;
                     }
-                } else if (structure_site.length > 0 && role.name == 'builder') {
-                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-                } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
-                    Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
                 }
+            } else if (structure_site.length > 0 && role.name == 'builder') {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+            } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
         }
     }
+    // }
     //生成creep的旧代码
     //#region
     // if (num_harvester.length < 3) {
@@ -218,7 +218,7 @@ export const loop = function () {
         let _creep = creeps[key];
         _creep.wasAttacked({ _creep });
         if (_creep.memory.role == 'Harvester') {
-            harvester.run({ _creep, noCarrier, _container: container_energy });
+            harvester.run({ _creep, noCarrier });
             if (_creep.ticksToLive < 100)
                 _creep.say(_creep.ticksToLive);
         }
