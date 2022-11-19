@@ -106,4 +106,32 @@
 //     console.log(b);
 // }
 // a({ b: 2 })
-// [[{ "type": "structure", "structure": { "id": "6363db3d1b7320b697ce4e5a", "room": { "name": "W41S22", "energyAvailable": 2300, "energyCapacityAvailable": 2300, "visual": { "roomName": "W41S22" } }, "pos": { "x": 29, "y": 23, "roomName": "W41S22" }, "store": {}, "storeCapacity": 2000, "ticksToDecay": 6, "hits": 250000, "hitsMax": 250000, "structureType": "container" }, "x": 29, "y": 23 }], [{ "type": "structure", "structure": { "id": "6367748c30a5ef2b469abaf4", "room": { "name": "W41S22", "energyAvailable": 2300, "energyCapacityAvailable": 2300, "visual": { "roomName": "W41S22" } }, "pos": { "x": 28, "y": 36, "roomName": "W41S22" }, "store": {}, "storeCapacity": 2000, "ticksToDecay": 169, "hits": 250000, "hitsMax": 250000, "structureType": "container" }, "x": 28, "y": 36 }]]
+// [
+//     {
+//         created: 43257307,
+//         createdTimestamp: 1668297632902,
+//         type: "buy",
+//         amount: 5000,
+//         remainingAmount: 5000,
+//         resourceType: "K",
+//         price: 0.239,
+//         roomName: "E50S0",
+//         id: "637033a07022aaf62b9a8510",
+//     },
+
+//     {
+//         created: 43259334,
+//         createdTimestamp: 1668305352022,
+//         type: "buy",
+//         amount: 15000,
+//         remainingAmount: 15000,
+//         resourceType: "K",
+//         price: 0.291,
+//         roomName: "W40S0",
+//         id: "637051c818ab62a07f8d5824",
+//     }
+
+// ];
+// Game.market.calcTransactionCost(1000,'W41S23','W40S0')//540
+// Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_KEANIUM })
+// Game.market.deal('637051c818ab62a07f8d5824',1000,'W41S22')

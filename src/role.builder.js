@@ -12,7 +12,7 @@ export const builder = {
              * @description 施工工地并按照所需energy的多少递增排序
              */
             // let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-            //所有房间的是施工地
+            //所有房间的施工地
             let construction = [];
             for (const key in Game.rooms) {
                 construction.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES))

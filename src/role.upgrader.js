@@ -10,7 +10,7 @@ export const upgrader = {
         //         _creep.moveTo(_creep.room.controller);
         //     }
         // }
-        if (withdraw.run({ _creep, _container: _creep.room.storage })) {
+        if (withdraw.run({ _creep, _container: _creep.room.storage, _resource: RESOURCE_ENERGY })) {
             if (_creep.upgradeController(_creep.room.controller) == ERR_NOT_IN_RANGE) {
                 _creep.moveTo(_creep.room.controller);
             }

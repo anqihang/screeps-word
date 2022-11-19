@@ -8,7 +8,10 @@
             "WORK",
             "WORK",
             "WORK",
+            "WORK",
             "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE",
             "MOVE",
             "MOVE"
@@ -57,12 +60,15 @@
     },
     "Upgrader": {
         "name": "upgrader",
-        "number": 4,
+        "number": 8,
         "body": [
             "WORK",
             "WORK",
             "CARRY",
             "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE",
             "MOVE"
         ],
@@ -107,7 +113,9 @@
         },
         "target": "_creep.room.controller",
         "origin": "_creep.room.storage",
-        "method": "upgradeController"
+        "method": "transfer",
+        "resource": "RESOURCE_ENERGY",
+        "amount": 100
     },
     "MineralHarvester": {
         "name": "mineralharvester",

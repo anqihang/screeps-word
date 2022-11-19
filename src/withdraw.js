@@ -6,9 +6,11 @@ export const withdraw = {
      * @param {*} _creep 
      * @param {*} _container 拿取energy的对象 (选填)
      * @param {Boolean} isStorage 是否是去storage拿能量 (选填)
+     * @param {*} _resource 拿取的resource种类
+     * @param {*} _resource 拿取的resource数量
      * @returns {Boolean}
      */
-    run: function ({ _creep, _container, isStorage }) {
+    run: function ({ _creep, _container, _resource, _amount, isStorage }) {
         /**
          * @description 有energy的container建筑【arr】
          * @param {Array} container_energy
@@ -24,7 +26,7 @@ export const withdraw = {
          */
         let containers_mineral = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
-                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_KEANIUM) > 0;
+                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_KEANIUM) > 300;
             }
         });
 
@@ -32,34 +34,35 @@ export const withdraw = {
         // const energy = _creep.room.find(FIND_DROPPED_RESOURCES);
 
         /**
-         * @description 判断container有没有energy,都没有为true
-         * @param {boolean} haveEnergy
+         * @description  
+         * @param {boolean} noEnergy 判断container有没有energy,都没有为true
          */
-        let haveEnergy = false;//有energy为false
-        let haveMineral = false;
-        haveEnergy = containers_energy.every(element => {
-            return element.store.getUsedCapacity(RESOURCE_ENERGY) == 0;//---
-        })
+        let noEnergy = false;//有energy为false
+        let noMineral = false;
+
+        noEnergy = containers_energy.every(element => {
+            return element.store.getUsedCapacity(RESOURCE_ENERGY) == 0;
+        });
         //全都没有矿物为true
-        haveMineral = containers_mineral.every(element => {
+        noMineral = containers_mineral.every(element => {
             return element.store.getUsedCapacity(RESOURCE_KEANIUM) == 0;
-        })
+        });
 
         //判断工作状态
         if (_creep.memory.working && _creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = false;
         } else if (!_creep.memory.working && _creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = true;
-        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && haveEnergy) || (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 && haveMineral)) {//自己身上有container没有能量
+        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && noEnergy) || (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 && noMineral)) {//自己身上有container没有能量
             return true;
-            //container都没energ而自身有一些energy
+            //container都空了而自身携带有一些
         }
 
         //if()
         if (!_creep.memory.working) {
-            //customer
-            if (_container) {
-                if (_creep.withdraw(_container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            //customer//自定义拿取的目标
+            if (_container && _resource) {
+                if (_creep.withdraw(_container, _resource, _amount) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(_container, {
                         visualizePathStyle: {
                             stroke: "#ffffff",
@@ -78,30 +81,30 @@ export const withdraw = {
             //#endregion
 
             //container有energy时拿取container的energy//10.31只有carrier能在container拿取
-            if (!haveEnergy && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
+            if (!noEnergy && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
                 if (_creep.withdraw(containers_energy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers_energy[0], {
                         visualizePathStyle: {
                             stroke: "#ffffff",
-                            opacity: 1
+                            opacity: .3
                         }
                     });
                 }
             }
             //container没energy后有k拿取k
-            else if (!haveMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
+            else if (!noMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
                 if (_creep.withdraw(containers_mineral[0], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers_mineral[0], {
                         visualizePathStyle: {
-                            stroke: "#ffffff",
-                            opacity: 1
+                            stroke: "#906efa",
+                            opacity: .3
                         }
                     })
                 }
             }
 
             //container没有energy后拿取storage的energy(运输目标是storage时不执行)
-
+            //
             else if (!isStorage) {
 
                 //storage
@@ -113,7 +116,7 @@ export const withdraw = {
                     _creep.moveTo(storage, {
                         visualizePathStyle: {
                             stroke: "#ffffff",
-                            opacity: 1
+                            opacity: .6
                         }
                     });
                 }

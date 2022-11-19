@@ -12,7 +12,7 @@ export const claimer = {
                 _creep.moveTo(room.controller, {
                     visualizePathStyle: {
                         stroke: '#b99cfb',
-                        opacity: .8
+                        opacity: 1
                     }
                 })
             }
