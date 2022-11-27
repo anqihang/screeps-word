@@ -613,33 +613,6 @@ const outHarvester = {
     }
 };
 
-//新房间挖能量运输能量
-
-const H_Cer = {
-    /**
-     * @description 新房间采集、运输energy
-     * @param {Object} _creep creep对象
-     * @param {object} _room  room对象
-     */
-    run: function ({ _creep, _room }) {
-        let structure_energy = Game.rooms['W41S23'].find(FIND_STRUCTURES, {
-            filter: item => {
-                return (item.structureType == STRUCTURE_TOWER || item.structureType == STRUCTURE_SPAWN) && item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        if (harvest.run({ _creep, _target: _room.find(FIND_SOURCES_ACTIVE) })) {
-            if (_creep.transfer(structure_energy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                _creep.moveTo(structure_energy[0], {
-                    visualizePathStyle: {
-                        stroke: '#ffffff',
-                        opacity: .3
-                    }
-                });
-            }
-        }
-    }
-};
-
 //tower
 const tower = {
     /**
@@ -994,12 +967,12 @@ const loop = function () {
     let num_customer = filter('Customer');
     let num_mineralharvester = filter('MineralHarvester');
     let num_outharvester = filter('OutHarvester');
-    let num_hcer = filter('HCer');
+    // let num_hcer = filter('HCer');
     //+
     let num = {
         num_harvester, num_builder, num_upgrader, num_repairer,
         num_carrier, num_customer, num_mineralharvester, num_outharvester,
-        num_hcer
+        // num_hcer
     };
     //所有房间的施工地
     let structure_site_all = [];
@@ -1038,7 +1011,7 @@ const loop = function () {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
             //外房运输energy-有外房间时孵化
-            else if (role.name = moreRoom) ;
+            else if (role.name == 'hcer' && moreRoom) ;
             //除建筑/采矿/外能量
             else if (role.name != 'builder' && role.name != 'mineralharvester' && role.name != 'outharvester') {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
@@ -1126,9 +1099,6 @@ const loop = function () {
             case 'OutHarvester': {
                 outHarvester.run({ _creep, _room: Game.rooms['W41S23'] });
             } break;
-            case 'HCer': {
-                H_Cer.run({ _creep, _room: Game.rooms['W41S23'] });
-            }
         }
         //存活时间小于10显示气泡
         if (_creep.ticksToLive < 10)
