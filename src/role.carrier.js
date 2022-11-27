@@ -70,6 +70,7 @@ export const carrier = {
             //携带有k就传送k到storage
             if (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0) {
                 // for (const resourceType in _creep.carry) {
+                //根据creep自身的targetIndex选择目标
                 if (_creep.transfer(storage[_creep.memory.targetIndex], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(storage[_creep.memory.targetIndex], {
                         visualizePathStyle: {

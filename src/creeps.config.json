@@ -60,7 +60,7 @@
     },
     "Upgrader": {
         "name": "upgrader",
-        "number": 8,
+        "number": 5,
         "body": [
             "WORK",
             "WORK",

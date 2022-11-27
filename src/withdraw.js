@@ -105,7 +105,7 @@ export const withdraw = {
 
             //container没有energy后拿取storage的energy(运输目标是storage时不执行)
             //
-            else if (!isStorage) {
+            else if (!isStorage && !_resource) {
 
                 //storage
                 let storage = _creep.room.find(FIND_STRUCTURES, {

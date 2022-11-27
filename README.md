@@ -6,11 +6,12 @@
 
 > - 角色（role)
 
-    - role.harvester  采集者
-    - role.builder    建造者
-    - role.upgeader   升级者
-    - role.repairer   维修者(消耗1修复40)
-    - role.carrier    运输者
+    - role.harvester  采集单位
+    - role.builder    建造单位
+    - role.upgeader   升级单位
+    - role.repairer   维修单位(消耗1修复40)
+    - role.carrier    运输单位
+    - role.attacker   战斗单位
 
 > - 基础工作(base work)
 
@@ -19,7 +20,12 @@
 
 > - 配置文件(config.json)
 
-    - creeps    数量，部件
+    - creeps
+        # number 数量
+        # body   部件
+        # memory 定义字段
+
+    - rooms
 
 > - 建筑(structure)
 

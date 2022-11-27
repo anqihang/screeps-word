@@ -1,0 +1,10 @@
+{
+    "fileName": "rooms_config",
+    "roomsData": [
+        {
+            "roomName": "W41S22",
+            "roomStyle": "complate",
+            "roomLevel": 7
+        }
+    ]
+}

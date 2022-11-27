@@ -21,7 +21,7 @@ const stateScanner = function () {
     Memory.stats.rclPrgress = Game.rooms['W41S22'].controller.progress / Game.rooms['W41S22'].controller.progressTotal;
 
 }
-//##################################################################################
+//-----------------------------------------------------------------------------------------------------------------------
 
 //role
 import { harvester } from './role.harvester';
@@ -35,6 +35,7 @@ import { attacker } from './role/role.attacker';
 //扩张
 import { claimer } from './role.claimer';
 import { outHarvester } from './Temporary/outHarvester';
+import { H_Cer } from './Temporary/H_Cer';
 //structure
 import { tower } from './structure.tower';
 //config
@@ -44,10 +45,11 @@ import role_config from './creeps.config.json';
 //     Game.market.outgoingTransactions()
 // }
 //############################################################################
+//判断任务队列是否改变-第一个任务完成
 Memory.carryTarget = "";
 Memory.repairTarget = "";
 
-//缓存的路径
+//缓存的路径|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|
 let path = [];
 if (Game.rooms['W41S23']) {
     path = Game.rooms['W41S23'].findPath(new RoomPosition(35, 42, 'W41S23'), new RoomPosition(23, 0, 'W41S23'));
@@ -57,6 +59,7 @@ Memory.W41S23_energyTotop = '3541111188888888888811111111111111181111211111';
 //
 //W41S22房间的矿
 let mineral_k = Game.rooms['W41S22'].find(FIND_MINERALS);
+
 
 /**
  * 将字符串变为变量
@@ -90,7 +93,7 @@ function tov(str) {
     return r;
 }
 
-//原型方法-------------------------------------------------------
+//原型方法>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //原型-切换目标对象(self-role对象数组)
 Creep.prototype.switchTarget = function (self) {
     if (self.memory.targetIndex == 0) {
@@ -109,7 +112,7 @@ Creep.prototype.wasAttacked = function ({ _creep }) {
 //判断是否creep个数改变了
 let creepsL;
 
-//loop主函数----------------------------------------------------------------
+//loop主函数-----------------------------------------------------------------------------------------------------------------------
 export const loop = function () {
     //兑换pielx
     if (Game.cpu.bucket == 10000) {
@@ -125,7 +128,7 @@ export const loop = function () {
             delete Memory.creeps[key]
         }
     }
-    //分配structure任务
+    //分配structure_tower任务
     for (const key in structures) {
         let structure = structures[key];
         if (structure.structureType == STRUCTURE_TOWER) {
@@ -164,21 +167,20 @@ export const loop = function () {
     let num_customer = filter('Customer');
     let num_mineralharvester = filter('MineralHarvester');
     let num_outharvester = filter('OutHarvester');
+    let num_hcer = filter('HCer');
+    //+
     let num = {
         num_harvester, num_builder, num_upgrader, num_repairer,
-        num_carrier, num_customer, num_mineralharvester, num_outharvester
+        num_carrier, num_customer, num_mineralharvester, num_outharvester,
+        num_hcer
     };
     //所有房间的施工地
-    // let structure_site = [];
-    // if (moreRoom) {
-    //     structure_site = Game.rooms['W41S23'].find(FIND_CONSTRUCTION_SITES);
-    // }
     let structure_site_all = [];
     for (const key in Game.rooms) {
         structure_site_all.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES))
     }
 
-    //生成新creep完成时
+    //生成新creep完成时执行，分配targetIndex
     if (Object.keys(creeps).length != creepsL) {
         creepsL = Object.keys(creeps).length;
         //生成新的harvester时给所有harester分配index
@@ -196,15 +198,27 @@ export const loop = function () {
         let role = role_config[key];
         if (getVerb(num, `num_${role.name}`).length < role.number) {
             let index = Math.floor(Math.random() * 10);
-            if (role.name != 'builder' && role.name != 'mineralharvester' && role.name != 'outharvester') {
+            //建造-有施工地时孵化
+            if (structure_site_all.length > 0 && role.name == 'builder') {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+            }
+            //采矿-矿有资源时孵化
+            else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+            }
+            //外能量-有外房间时孵化
+            else if (moreRoom && role.name == 'outharvester') {
+                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+            }
+            //外房运输energy-有外房间时孵化
+            else if (role.name = 'h_cer' && moreRoom) {
+                // Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+                // Game.spawns['Spawn_W41S23'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+            }
+            //除建筑/采矿/外能量
+            else if (role.name != 'builder' && role.name != 'mineralharvester' && role.name != 'outharvester') {
                 Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
 
-            } else if (structure_site_all.length > 0 && role.name == 'builder') {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-            } else if (role.name == 'mineralharvester' && mineral_k[0].mineralAmount > 0) {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-            } else if (moreRoom && role.name == 'outharvester') {
-                Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
         }
     }
@@ -265,6 +279,10 @@ export const loop = function () {
             case 'Carrier': {
                 carrier.run({ _creep, arr_carrier });
             }; break;
+            case 'MineralHarvester': {
+                mineral_harvester.run({ _creep, _mineral: mineral_k });
+            }; break;
+            //自定义
             case 'Customer': {
                 customer.run({
                     _creep,
@@ -273,25 +291,26 @@ export const loop = function () {
                     _method: 'transfer',
                     _resource: RESOURCE_KEANIUM,
                     //大于容量会停止widthdraw
-                    _amount: 100
+                    _amount: 50
                 });
             }; break;
-            case 'MineralHarvester': {
-                mineral_harvester.run({ _creep, _mineral: mineral_k });
-            }; break;
+
+            //扩张
             case 'Claimer': {
                 claimer.run({ _creep });
             }; break;
             case 'OutHarvester': {
-                if (moreRoom) {
-                    outHarvester.run({ _creep, _room: Game.rooms['W41S23'] });
-                }
+                outHarvester.run({ _creep, _room: Game.rooms['W41S23'] });
             }; break;
+            case 'HCer': {
+                H_Cer.run({ _creep, _room: Game.rooms['W41S23'] });
+            }
 
-
+            //
             default:
                 break;
         }
+        //存活时间小于10显示气泡
         if (_creep.ticksToLive < 10)
             _creep.say(_creep.ticksToLive);
         //

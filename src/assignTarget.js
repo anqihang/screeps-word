@@ -1,3 +1,4 @@
+//任务目标的分配，保证在完成前不会切换目标对象
 export const assignTarget = {
     /**
      * @description 给不同的creep分配不同的目标对象
