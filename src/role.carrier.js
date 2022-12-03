@@ -19,7 +19,7 @@ export const carrier = {
         let structure_energy = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
                 return (item.structureType == STRUCTURE_EXTENSION ||
-                    item.structureType == STRUCTURE_SPAWN ||
+                    // item.structureType == STRUCTURE_SPAWN ||                         
                     item.structureType == STRUCTURE_TOWER) &&
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }

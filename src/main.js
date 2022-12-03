@@ -35,7 +35,7 @@ import { attacker } from './role/role.attacker';
 //扩张
 import { claimer } from './role.claimer';
 import { outHarvester } from './Temporary/outHarvester';
-// import { H_Cer } from './Temporary/H_Cer';
+import { H_Cer } from './Temporary/H_Cer';
 //structure
 import { tower } from './structure.tower';
 //config
@@ -167,12 +167,13 @@ export const loop = function () {
     let num_customer = filter('Customer');
     let num_mineralharvester = filter('MineralHarvester');
     let num_outharvester = filter('OutHarvester');
-    // let num_hcer = filter('HCer');
+    let num_hcer = filter('HCer');
+    // console.log(num_customer);
     //+
     let num = {
         num_harvester, num_builder, num_upgrader, num_repairer,
         num_carrier, num_customer, num_mineralharvester, num_outharvester,
-        // num_hcer
+        num_hcer
     };
     //所有房间的施工地
     let structure_site_all = [];
@@ -213,7 +214,7 @@ export const loop = function () {
             //外房运输energy-有外房间时孵化
             else if (role.name == 'hcer' && moreRoom) {
                 // Game.spawns['Spawn0'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
-                // Game.spawns['Spawn_W41S23'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
+                Game.spawns['Spawn_W41S23'].spawnCreep(tov(role.body), `${role.name}${index}`, { memory: role.memory });
             }
             //除建筑/采矿/外能量
             else if (role.name != 'builder' && role.name != 'mineralharvester' && role.name != 'outharvester') {
@@ -289,7 +290,7 @@ export const loop = function () {
                     _target: _creep.room.terminal,
                     _origin: _creep.room.storage,
                     _method: 'transfer',
-                    _resource: RESOURCE_KEANIUM,
+                    _resource: RESOURCE_ENERGY,
                     //大于容量会停止widthdraw
                     _amount: 50
                 });
@@ -302,9 +303,9 @@ export const loop = function () {
             case 'OutHarvester': {
                 outHarvester.run({ _creep, _room: Game.rooms['W41S23'] });
             }; break;
-            // case 'HCer': {
-            //     H_Cer.run({ _creep, _room: Game.rooms['W41S23'] });
-            // }
+            case 'HCer': {
+                H_Cer.run({ _creep, _room: Game.rooms['W41S23'] });
+            }
 
             //
             default:

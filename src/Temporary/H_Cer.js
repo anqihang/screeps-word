@@ -10,7 +10,7 @@ export const H_Cer = {
     run: function ({ _creep, _room }) {
         let structure_energy = Game.rooms['W41S23'].find(FIND_STRUCTURES, {
             filter: item => {
-                return (item.structureType == STRUCTURE_TOWER || item.structureType == STRUCTURE_SPAWN) && item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return (item.structureType == STRUCTURE_TOWER || item.structureType == STRUCTURE_SPAWN || item.structureType == STRUCTURE_EXTENSION) && item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         if (harvest.run({ _creep, _target: _room.find(FIND_SOURCES_ACTIVE) })) {

@@ -60,7 +60,7 @@
     },
     "Upgrader": {
         "name": "upgrader",
-        "number": 5,
+        "number": 6,
         "body": [
             "WORK",
             "WORK",
@@ -133,7 +133,7 @@
     },
     "OutHarvester": {
         "name": "outharvester",
-        "number": 1,
+        "number": 2,
         "body": [
             "WORK",
             "WORK",
@@ -150,6 +150,18 @@
         ],
         "memory": {
             "role": "OutHarvester"
+        }
+    },
+    "HCer": {
+        "name": "hcer",
+        "number": 1,
+        "body": [
+            "WORK",
+            "CARRY",
+            "MOVE"
+        ],
+        "memory": {
+            "role": "HCer"
         }
     }
 }
