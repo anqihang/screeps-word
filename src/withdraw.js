@@ -102,16 +102,15 @@ export const withdraw = {
                     })
                 }
             }
-
-            //container没有energy后拿取storage的energy(运输目标是storage时不执行)
+            //container没有energy后拿取storage的energy(运输目标是storage时不执行，自定义resource时不执行)
             //
             else if (!isStorage && !_resource) {
-
                 //storage
-                let storage = _creep.room.find(FIND_STRUCTURES, {
-                    filter: item => item.structureType == STRUCTURE_STORAGE
-                });
-                storage = Game.rooms['W41S22'].storage;
+                // let storage = _creep.room.find(FIND_STRUCTURES, {
+                //     filter: item => item.structureType == STRUCTURE_STORAGE
+                // })[0];
+                let storage = _creep.room.storage;
+                // storage = Game.rooms['W41S22'].storage;
                 if (_creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(storage, {
                         visualizePathStyle: {
@@ -121,7 +120,6 @@ export const withdraw = {
                     });
                 }
             }
-
             return false;
         } else {
             return true;

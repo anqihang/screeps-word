@@ -36,8 +36,9 @@ export const outHarvester = {
                         opacity: .3
                     }
                 });
+                //移动的时候维修道路
                 let road_repair = _creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                    filter: item => item.structureType == STRUCTURE_ROAD && item.hits < item.hitsMax
+                    filter: item => (item.structureType == STRUCTURE_ROAD || item.structureType == STRUCTURE_CONTAINER) && item.hits < item.hitsMax
                 });
                 if (road_repair) {
                     _creep.repair(road_repair[0]);

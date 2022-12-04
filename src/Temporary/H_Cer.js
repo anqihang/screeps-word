@@ -10,7 +10,11 @@ export const H_Cer = {
     run: function ({ _creep, _room }) {
         let structure_energy = Game.rooms['W41S23'].find(FIND_STRUCTURES, {
             filter: item => {
-                return (item.structureType == STRUCTURE_TOWER || item.structureType == STRUCTURE_SPAWN || item.structureType == STRUCTURE_EXTENSION) && item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return (item.structureType == STRUCTURE_TOWER ||
+                    item.structureType == STRUCTURE_SPAWN ||
+                    item.structureType == STRUCTURE_EXTENSION
+                    || item.structureType == STRUCTURE_STORAGE
+                ) && item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         if (harvest.run({ _creep, _target: _room.find(FIND_SOURCES_ACTIVE) })) {
@@ -21,6 +25,13 @@ export const H_Cer = {
                         opacity: .3
                     }
                 })
+            }
+            //移动的时候维修道路
+            let road_repair = _creep.pos.findInRange(FIND_STRUCTURES, 3, {
+                filter: item => (item.structureType == STRUCTURE_ROAD || item.structureType == STRUCTURE_CONTAINER) && item.hits < item.hitsMax
+            });
+            if (road_repair) {
+                _creep.repair(road_repair[0]);
             }
         }
     }

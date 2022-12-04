@@ -4,7 +4,267 @@
         {
             "roomName": "W41S22",
             "roomStyle": "complate",
-            "roomLevel": 7
+            "roomLevel": 7,
+            "creepnum": 0,
+            "creeps": {
+                "Harvester": {
+                    "name": "harvester",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Harvester",
+                        "targetIndex": 0
+                    }
+                },
+                "Carrier": {
+                    "name": "carrier",
+                    "number": 0,
+                    "body": [
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Carrier",
+                        "targetIndex": 0
+                    }
+                },
+                "Builder": {
+                    "name": "builder",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Builder"
+                    }
+                },
+                "Upgrader": {
+                    "name": "upgrader",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Upgrader"
+                    }
+                },
+                "Repairer": {
+                    "name": "repairer",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Repairer",
+                        "targetIndex": "0"
+                    }
+                },
+                "Customer": {
+                    "name": "customer",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Customer"
+                    },
+                    "target": "_creep.room.controller",
+                    "origin": "_creep.room.storage",
+                    "method": "transfer",
+                    "resource": "RESOURCE_ENERGY",
+                    "amount": 100
+                },
+                "MineralHarvester": {
+                    "name": "mineralharvester",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "MineralHarvester"
+                    }
+                }
+            }
+        },
+        {
+            "roomName": "W41S23",
+            "roomStyle": "complate",
+            "roomLevel": 7,
+            "creepnum": 0,
+            "creeps": {
+                "Harvester": {
+                    "name": "harvester",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "CARRY",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Harvester",
+                        "targetIndex": 0
+                    }
+                },
+                "Carrier": {
+                    "name": "carrier",
+                    "number": 0,
+                    "body": [
+                        "CARRY",
+                        "CARRY",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Carrier",
+                        "targetIndex": 0
+                    }
+                },
+                "Builder": {
+                    "name": "builder",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Builder"
+                    }
+                },
+                "Upgrader": {
+                    "name": "upgrader",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Upgrader"
+                    }
+                },
+                "Repairer": {
+                    "name": "repairer",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Repairer",
+                        "targetIndex": "0"
+                    }
+                },
+                "Customer": {
+                    "name": "customer",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Customer"
+                    },
+                    "target": "_creep.room.controller",
+                    "origin": "_creep.room.storage",
+                    "method": "transfer",
+                    "resource": "RESOURCE_ENERGY",
+                    "amount": 100
+                },
+                "MineralHarvester": {
+                    "name": "mineralharvester",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "MineralHarvester"
+                    }
+                }
+            }
         }
     ]
 }

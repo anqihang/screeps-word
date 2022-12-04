@@ -157,7 +157,11 @@
         "number": 1,
         "body": [
             "WORK",
+            "WORK",
             "CARRY",
+            "CARRY",
+            "CARRY",
+            "MOVE",
             "MOVE"
         ],
         "memory": {
