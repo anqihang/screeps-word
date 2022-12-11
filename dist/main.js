@@ -1271,14 +1271,10 @@ Creep.prototype.wasAttacked = function ({ _creep }) {
  * @param {Number} creepNum 全局creep的数量，判断是否creep个数改变了
  */
 let creepsNum;
-let creepsRoomNum = {
-    'W41S22': 0,
-    'W41S23': 0
-};
 /**
  * @param {Object} creepsAll 全局所有creep
  */
-let creepsAll = Game.creeps; //+++++
+// let creepsAll = Game.creeps; //+++++
 /**
  * @description 所有spawn按房间分
  * @param {Object} spawnRoom
@@ -1303,6 +1299,9 @@ const loop = function () {
     //
     let creeps = Game.creeps;
     let structures = Game.structures;
+    //
+    let creepsAll = Game.creeps; //+++++
+
     //是否控制多个房间
     let moreRoom = Object.keys(Game.rooms).length > 1 ? true : false;
     /**
@@ -1334,11 +1333,9 @@ const loop = function () {
     }
     //分配不同目标对象时需要的role对象数组
     let arr_harvester = roleArray("Harvester");
-    // let arr_builder = roleArray("Builder");
-    // let arr_upgrader = roleArray("Upgrader");
-    let arr_repairer = roleArray("Repairer");
-    let arr_carrier = roleArray("Carrier");
-    //++++++
+
+    roleArray("Repairer");
+    roleArray("Carrier");
     /**
      * @description 检索creep按房间的不同种类的creep
      * @param {String} role 检索的memory的role（Harvester）
@@ -1360,11 +1357,11 @@ const loop = function () {
         return arr;
     }
     //分配不同目标对象时需要的role对象数组(按照room)
-    let arrRoom_harvester = f_roleArrayRoom("Harvester");
+    f_roleArrayRoom("Harvester");
     f_roleArrayRoom("Builder");
     f_roleArrayRoom("Upgrader");
-    f_roleArrayRoom("Repairer");
-    f_roleArrayRoom("Carrier");
+    let arrRoom_repairer = f_roleArrayRoom("Repairer");
+    let arrRoom_carrier = f_roleArrayRoom("Carrier");
     // console.log(JSON.stringify(arrRoom_harvester));
     //+++++++++
     //统计不同种类creep的名字数组(用于数量计算)【arr】
@@ -1412,16 +1409,14 @@ const loop = function () {
                 }
             }
         }
+        console.log(JSON.stringify(obj));
         numRoomCreep[iterator.roomName] = obj;
     }
-    //一個房間的creep數量
-    let numRoom = {};
     for (const room in numRoomCreep) {
         let num = 0;
         for (const name in numRoomCreep[room]) {
             num += numRoomCreep[room][name];
         }
-        numRoom[room] = num;
     }
     //+++++++++++++++++++++++++++++++++++
     //所有房间的施工地
@@ -1444,15 +1439,15 @@ const loop = function () {
         // }
     }
     //creep死亡和新生后执行，给harvester分配index
-    for (const room in Game.rooms) {
-        if (numRoom[room] != creepsRoomNum[room]) {
-            creepsRoomNum[room] = numRoom[room];
-            let new_arr_harvester = f_roleArrayRoom('Harvester')[room];
-            for (const index in arrRoom_harvester[room]) {
-                new_arr_harvester[index].memory.targetIndex = index % 2;
-            }
-        }
-    }
+    // for (const room in Game.rooms) {
+    //     if (numRoom[room] != creepsRoomNum[room]) {
+    //         creepsRoomNum[room] = numRoom[room];
+    //         let new_arr_harvester = f_roleArrayRoom('Harvester')[room];
+    //         for (const index in arrRoom_harvester[room]) {
+    //             new_arr_harvester[index].memory.targetIndex = index % 2;
+    //         }
+    //     }
+    // }
     //
     //根据config生成新creep
     for (const key in role_config) {
@@ -1469,7 +1464,7 @@ const loop = function () {
             }
             //外能量-有外房间时孵化
             else if (moreRoom && role.name == "outharvester") {
-                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W14S23_${index}`, { memory: role.memory });
+                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
             }
             //外房运输energy-有外房间时孵化
             else if (role.name == "hcer" && moreRoom) {
@@ -1482,14 +1477,12 @@ const loop = function () {
         }
     }
     //###############
-
     /**
      * @description 孵化creep
      */
     for (const room of rooms_config.roomsData) {
         //一个房间的配置
         let numCreep = numRoomCreep[room.roomName];
-        // console.log(JSON.stringify(creepsAll));
         // console.log(JSON.stringify(numRoomCreep));
         for (const key in room.creeps) {
             //不同种类的creep配置
@@ -1518,7 +1511,6 @@ const loop = function () {
             }
         }
     }
-
     //###############
     //判断harvester是否担任运输任务
     let noCarrier = false;
@@ -1527,77 +1519,80 @@ const loop = function () {
     }
 
     //分配creep任务
-    for (const key in creeps) {
-        let _creep = creeps[key];
-        //自身检查是否被攻击了并发出孵化attack指令
-        _creep.wasAttacked({ _creep });
+    for (const room in Game.rooms) {
+        for (const key in Game.creeps) {
+            if (key.includes(room)) {
+                let _creep = Game.creeps[key];
+                //自身检查是否被攻击了并发出孵化attack指令
+                _creep.wasAttacked({ _creep });
 
-        //
-        switch (_creep.memory.role) {
-            case "Harvester":
-                {
-                    harvester.run({ _creep, noCarrier });
+                switch (_creep.memory.role) {
+                    case "Harvester":
+                        {
+                            harvester.run({ _creep, noCarrier });
+                        }
+                        break;
+                    case "Builder":
+                        {
+                            builder.run(_creep);
+                        }
+                        break;
+                    case "Upgrader":
+                        {
+                            upgrader.run(_creep);
+                        }
+                        break;
+                    case "Repairer":
+                        {
+                            repairer.run({ _creep, arr_repairer: arrRoom_repairer[room] });
+                        }
+                        break;
+                    case "Carrier":
+                        {
+                            carrier.run({ _creep, arr_carrier: arrRoom_carrier[room] });
+                        }
+                        break;
+                    case "MineralHarvester":
+                        {
+                            mineral_harvester.run({ _creep, _mineral: Game.rooms[room].find(FIND_MINERALS) });
+                        }
+                        break;
+                    //自定义
+                    case "Customer":
+                        {
+                            customer.run({
+                                _creep,
+                                _target: _creep.room.terminal,
+                                _origin: _creep.room.storage,
+                                _method: "transfer",
+                                _resource: RESOURCE_ENERGY,
+                                //大于容量会停止widthdraw
+                                _amount: 50,
+                            });
+                        }
+                        break;
+                    //扩张
+                    case "Claimer":
+                        {
+                            claimer.run({ _creep });
+                        }
+                        break;
+                    case "OutHarvester":
+                        {
+                            outHarvester.run({ _creep, _room: Game.rooms["W41S23"] });
+                        }
+                        break;
+                    case "HCer": {
+                        H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
+                    }
                 }
-                break;
-            case "Builder":
-                {
-                    builder.run(_creep);
-                }
-                break;
-            case "Upgrader":
-                {
-                    upgrader.run(_creep);
-                }
-                break;
-            case "Repairer":
-                {
-                    repairer.run({ _creep, arr_repairer });
-                }
-                break;
-            case "Carrier":
-                {
-                    carrier.run({ _creep, arr_carrier });
-                }
-                break;
-            case "MineralHarvester":
-                {
-                    mineral_harvester.run({ _creep, _mineral: mineral_k });
-                }
-                break;
-            //自定义
-            case "Customer":
-                {
-                    customer.run({
-                        _creep,
-                        _target: _creep.room.terminal,
-                        _origin: _creep.room.storage,
-                        _method: "transfer",
-                        _resource: RESOURCE_ENERGY,
-                        //大于容量会停止widthdraw
-                        _amount: 50,
-                    });
-                }
-                break;
+                //     //存活时间小于10显示气泡
+                if (_creep.ticksToLive < 10) _creep.say(_creep.ticksToLive);
 
-            //扩张
-            case "Claimer":
-                {
-                    claimer.run({ _creep });
-                }
-                break;
-            case "OutHarvester":
-                {
-                    outHarvester.run({ _creep, _room: Game.rooms["W41S23"] });
-                }
-                break;
-            case "HCer": {
-                H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
             }
         }
-        //存活时间小于10显示气泡
-        if (_creep.ticksToLive < 10) _creep.say(_creep.ticksToLive);
-        //
     }
+    //
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
     stateScanner();
 };
