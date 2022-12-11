@@ -316,15 +316,15 @@ export const loop = function () {
         // }
     }
     //creep死亡和新生后执行，给harvester分配index
-    for (const room in Game.rooms) {
-        if (numRoom[room] != creepsRoomNum[room]) {
-            creepsRoomNum[room] = numRoom[room];
-            let new_arr_harvester = f_roleArrayRoom('Harvester')[room];
-            for (const index in arrRoom_harvester[room]) {
-                new_arr_harvester[index].memory.targetIndex = index % 2;
-            }
-        }
-    }
+    // for (const room in Game.rooms) {
+    //     if (numRoom[room] != creepsRoomNum[room]) {
+    //         creepsRoomNum[room] = numRoom[room];
+    //         let new_arr_harvester = f_roleArrayRoom('Harvester')[room];
+    //         for (const index in arrRoom_harvester[room]) {
+    //             new_arr_harvester[index].memory.targetIndex = index % 2;
+    //         }
+    //     }
+    // }
     //
     //根据config生成新creep
     for (const key in role_config) {
@@ -474,6 +474,54 @@ export const loop = function () {
         if (_creep.ticksToLive < 10) _creep.say(_creep.ticksToLive);
         //
     }
+
+    //
+    // for (const room in Game.rooms) {
+    //     for (const key in Game.creeps) {
+    //         if (key.includes(room)) {
+    //             let _creep = Game.creeps[key];
+    //             switch (_creep.memory.role) {
+    //                 case "Harvester":
+    //                     {
+    //                         harvester.run({ _creep, noCarrier });
+    //                     }
+    //                     break;
+    //                 case "Builder":
+    //                     {
+    //                         builder.run(_creep);
+    //                     }
+    //                     break;
+    //                 case "Upgrader":
+    //                     {
+    //                         upgrader.run(_creep);
+    //                     }
+    //                     break;
+    //                 case "Repairer":
+    //                     {
+    //                         repairer.run({ _creep, arr_repairer: arrRoom_repairer[room] });
+    //                     }
+    //                     break;
+    //                 case "Carrier":
+    //                     {
+    //                         carrier.run({ _creep, arr_carrier: arrRoom_carrier[room] });
+    //                     }
+    //                     break;
+    //                 case "MineralHarvester":
+    //                     {
+    //                         mineral_harvester.run({ _creep, _mineral: Game.rooms[room].find(FIND_MINERALS) });
+    //                     }
+    //                     break;
+
+    //                 //
+    //                 default:
+    //                     break;
+    //             }
+    // if (_creep.ticksToLive < 10) _creep.say(_creep.ticksToLive);
+
+    //         }
+    //     }
+    // }
+    //
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
     stateScanner();
 };
