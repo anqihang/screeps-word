@@ -925,7 +925,7 @@ var roomsData = [
 			},
 			Builder: {
 				name: "builder",
-				number: 0,
+				number: 1,
 				body: [
 					"WORK",
 					"WORK",
@@ -1050,7 +1050,7 @@ var roomsData = [
 			},
 			Builder: {
 				name: "builder",
-				number: 0,
+				number: 2,
 				body: [
 					"WORK",
 					"WORK",
@@ -1403,13 +1403,11 @@ const loop = function () {
         for (const key in iterator.creeps) {
             obj[key] = 0;
             for (const name in creepsAll) {
-
-                if (name.includes(iterator.roomName) && name.includes(iterator.creeps[key].name)) {
+                if (name.includes(iterator.roomName) && RegExp(`^${iterator.creeps[key].name}`).test(name)) {
                     obj[key] += 1;
                 }
             }
         }
-        console.log(JSON.stringify(obj));
         numRoomCreep[iterator.roomName] = obj;
     }
     for (const room in numRoomCreep) {
@@ -1418,7 +1416,6 @@ const loop = function () {
             num += numRoomCreep[room][name];
         }
     }
-    //+++++++++++++++++++++++++++++++++++
     //所有房间的施工地
     let structure_site_all = [];
     for (const key in Game.rooms) {
@@ -1455,11 +1452,12 @@ const loop = function () {
         if (getVerb(num, `num_${role.name}`).length < role.number) {
             let index = Math.floor(Math.random() * 10);
             //建造-有施工地时孵化
-            if (structure_site_all.length > 0 && role.name == "builder") {
-                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-            }
+            // if (structure_site_all.length > 0 && role.name == "builder") {
+            //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
+            // }
             //采矿-矿有资源时孵化
-            else if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
+            // else
+            if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
                 Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
             }
             //外能量-有外房间时孵化
@@ -1476,14 +1474,12 @@ const loop = function () {
             }
         }
     }
-    //###############
     /**
      * @description 孵化creep
      */
     for (const room of rooms_config.roomsData) {
         //一个房间的配置
         let numCreep = numRoomCreep[room.roomName];
-        // console.log(JSON.stringify(numRoomCreep));
         for (const key in room.creeps) {
             //不同种类的creep配置
             let role = room.creeps[key];
@@ -1511,7 +1507,6 @@ const loop = function () {
             }
         }
     }
-    //###############
     //判断harvester是否担任运输任务
     let noCarrier = false;
     if (num_carrier.length == 0 && Game.spawns["Spawn0"].room.energyAvailable <= 300) {
