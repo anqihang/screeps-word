@@ -135,6 +135,8 @@
 // Game.market.calcTransactionCost(1000,'W41S23','W40S0')//540
 // Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_KEANIUM })
 // Game.market.deal('637051c818ab62a07f8d5824',1000,'W41S22')
-let a = 'harvester'
-let b = 'harvester_w41s22'
-console.log(new RegExp(`^harvester`).test(b));
+// let a = 'harvester'
+// let b = 'harvester_w41s22'
+// console.log(new RegExp(`^harvester`).test(b));
+let a = 1, b = 1, c = 1;
+console.log(a == b == c)

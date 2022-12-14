@@ -47,9 +47,15 @@ import rooms_config from "./config/rooms.config.json";
 // }
 //############################################################################
 //判断任务队列是否改变-第一个任务完成
-Memory.carryTarget = "";
-Memory.repairTarget = "";
-
+// Memory.carryTarget = "";
+// Memory.repairTarget = "";
+//
+Memory.targetTask = {};
+for (const room in Game.rooms) {
+    Memory.targetTask[room] = {};
+    Memory.targetTask[room].carryTarget = "";
+    Memory.targetTask[room].repairTarget = "";
+}
 //缓存的路径|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|
 // let path = [];
 // if (Game.rooms["W41S23"]) {
@@ -336,12 +342,13 @@ export const loop = function () {
             // }
             //采矿-矿有资源时孵化
             // else
-            if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
-                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-            }
+            // if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
+            //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
+            // }
             //外能量-有外房间时孵化
-            else if (moreRoom && role.name == "outharvester") {
-                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
+            // else
+            if (moreRoom && role.name == "outharvester") {
+                Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
             }
             //外房运输energy-有外房间时孵化
             else if (role.name == "hcer" && moreRoom) {
@@ -349,7 +356,7 @@ export const loop = function () {
             }
             //除建筑/采矿/外能量
             else if (role.name != "builder" && role.name != "mineralharvester" && role.name != "outharvester") {
-                Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
+                Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
             }
         }
     }
@@ -376,9 +383,9 @@ export const loop = function () {
                     f_spawnCreep(room, role);
                 }
                 //外房运输energy-有外房间时孵化
-                else if (role.name == "hcer" && moreRoom) {
-                    f_spawnCreep(room, role);
-                }
+                // else if (role.name == "hcer" && moreRoom) {
+                //     f_spawnCreep(room, role);
+                // }
                 //除建筑/采矿/外能量
                 else if (role.name != "builder" && role.name != "mineralharvester" && role.name != "outharvester") {
                     f_spawnCreep(room, role);

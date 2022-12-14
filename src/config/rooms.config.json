@@ -50,7 +50,7 @@
                 },
                 "Builder": {
                     "name": "builder",
-                    "number": 1,
+                    "number": 2,
                     "body": [
                         "WORK",
                         "WORK",
@@ -64,24 +64,6 @@
                     ],
                     "memory": {
                         "role": "Builder"
-                    }
-                },
-                "Upgrader": {
-                    "name": "upgrader",
-                    "number": 0,
-                    "body": [
-                        "WORK",
-                        "WORK",
-                        "CARRY",
-                        "CARRY",
-                        "CARRY",
-                        "CARRY",
-                        "MOVE",
-                        "MOVE",
-                        "MOVE"
-                    ],
-                    "memory": {
-                        "role": "Upgrader"
                     }
                 },
                 "Repairer": {
@@ -127,7 +109,7 @@
                 },
                 "MineralHarvester": {
                     "name": "mineralharvester",
-                    "number": 0,
+                    "number": 1,
                     "body": [
                         "WORK",
                         "WORK",
@@ -137,6 +119,24 @@
                     ],
                     "memory": {
                         "role": "MineralHarvester"
+                    }
+                },
+                "Upgrader": {
+                    "name": "upgrader",
+                    "number": 0,
+                    "body": [
+                        "WORK",
+                        "WORK",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "Upgrader"
                     }
                 }
             }
@@ -162,7 +162,7 @@
                 },
                 "Carrier": {
                     "name": "carrier",
-                    "number": 0,
+                    "number": 1,
                     "body": [
                         "CARRY",
                         "CARRY",
@@ -175,7 +175,7 @@
                 },
                 "Builder": {
                     "name": "builder",
-                    "number": 2,
+                    "number": 0,
                     "body": [
                         "WORK",
                         "WORK",

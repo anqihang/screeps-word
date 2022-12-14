@@ -1,3 +1,4 @@
+
 //任务目标的分配，保证在完成前不会切换目标对象
 export const assignTarget = {
     /**
@@ -6,11 +7,12 @@ export const assignTarget = {
      * @param {Object} roleTarget  Memory.carryTarget目标index
      * @param {Array} roleArr 相应的creep对象数组
      */
-    run: function ({ roleTarget, roleArr, targets }) {
-
+    run: function ({ room, roleTarget, roleArr, targets }) {
         //判断目标任务是否完成一个
-        if (Memory[roleTarget] != targets[0].id) {
-            Memory[roleTarget] = targets[0].id;
+        // if (Memory[roleTarget] != targets[0].id) {
+        //     Memory[roleTarget] = targets[0].id;
+        if (Memory.targetTask[room][roleTarget] != targets[0].id) {
+            Memory.targetTask[room][roleTarget] = targets[0].id;
             // 只剩一个任务时
             if (targets.length == 1) {
                 // _creep.memory.targetIndex = 0;

@@ -35,12 +35,8 @@ export const repairer = {
             //
             if (targets.length > 0) {
 
-                // const creeps = Game.spawns['Spawn0'].room.find(FIND_CREEPS).filter(item => {
-                //     return item.memory.role == 'Repairer';
-                // });
-
                 //分配目标对象
-                assignTarget.run({ roleTarget: 'repairTarget', roleArr: arr_repairer, targets: targets });
+                assignTarget.run({ room: _creep.room.name, roleTarget: 'repairTarget', roleArr: arr_repairer, targets: targets });
 
                 //if()
                 if (_creep.repair(targets[_creep.memory.targetIndex]) == ERR_NOT_IN_RANGE) {

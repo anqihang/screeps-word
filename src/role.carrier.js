@@ -38,38 +38,12 @@ export const carrier = {
             isStorage = true;
         }
         //切换targetIndex，保证任务完成时不会改变其他creep的任务目标
-        assignTarget.run({ roleTarget: 'carryTarget', roleArr: arr_carrier, targets: structure_energy });
-
-        //#region
-        //判断目标任务是否完成一个
-        // if (Memory.carryTarget != structure_energy[0].id) {
-        //     Memory.carryTarget = structure_energy[0].id;
-        //     // 只剩一个任务时
-        //     if (structure_energy.length == 1) {
-        //         // _creep.memory.targetIndex = 0;
-        //         arr_carrier.forEach(element => {
-        //             element.memory.targetIndex = 1;
-        //         });
-        //     } else {
-        //         // if (_creep == arr_carrier[1])
-        //         //任务超过一个后重新分配
-        //         if (arr_carrier[0].memory.targetIndex == arr_carrier[1].memory.targetIndex) {
-        //             arr_carrier[0].memory.targetIndex = 0;
-        //             arr_carrier[1].memory.targetIndex = 1;
-        //         }
-        //     }
-        //     //任务完成后切换下标保证不会改变原来的目标
-        //     for (const iterator of arr_carrier) {
-        //         iterator.switchTarget(iterator);
-        //     }
-        // }
-        //#endregion
+        assignTarget.run({ room: _creep.room.name, roleTarget: 'carryTarget', roleArr: arr_carrier, targets: structure_energy });
 
         //if()
         if (withdraw.run({ _creep, isStorage })) {
             //携带有k就传送k到storage
             if (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0) {
-                // for (const resourceType in _creep.carry) {
                 //根据creep自身的targetIndex选择目标
                 if (_creep.transfer(storage[_creep.memory.targetIndex], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(storage[_creep.memory.targetIndex], {
@@ -79,7 +53,6 @@ export const carrier = {
                         }
                     })
                 }
-                // }
             }
             //传送energy到需要的structure
             else {
@@ -96,9 +69,7 @@ export const carrier = {
                     })
                 }
             }
-
         }
-
     }
 }
 
