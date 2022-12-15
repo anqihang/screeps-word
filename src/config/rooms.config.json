@@ -9,7 +9,7 @@
             "creeps": {
                 "Harvester": {
                     "name": "harvester",
-                    "number": 0,
+                    "number": 2,
                     "body": [
                         "WORK",
                         "WORK",
@@ -31,7 +31,7 @@
                 },
                 "Carrier": {
                     "name": "carrier",
-                    "number": 0,
+                    "number": 2,
                     "body": [
                         "CARRY",
                         "CARRY",
@@ -68,7 +68,7 @@
                 },
                 "Repairer": {
                     "name": "repairer",
-                    "number": 0,
+                    "number": 2,
                     "body": [
                         "WORK",
                         "WORK",
@@ -123,7 +123,7 @@
                 },
                 "Upgrader": {
                     "name": "upgrader",
-                    "number": 0,
+                    "number": 6,
                     "body": [
                         "WORK",
                         "WORK",
@@ -149,10 +149,19 @@
             "creeps": {
                 "Harvester": {
                     "name": "harvester",
-                    "number": 0,
+                    "number": 1,
                     "body": [
                         "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
+                        "WORK",
                         "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
+                        "MOVE",
                         "MOVE"
                     ],
                     "memory": {
@@ -175,7 +184,7 @@
                 },
                 "Builder": {
                     "name": "builder",
-                    "number": 0,
+                    "number": 2,
                     "body": [
                         "WORK",
                         "WORK",
@@ -193,7 +202,7 @@
                 },
                 "Upgrader": {
                     "name": "upgrader",
-                    "number": 0,
+                    "number": 3,
                     "body": [
                         "WORK",
                         "WORK",

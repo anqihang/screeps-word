@@ -138,5 +138,14 @@
 // let a = 'harvester'
 // let b = 'harvester_w41s22'
 // console.log(new RegExp(`^harvester`).test(b));
-let a = 1, b = 1, c = 1;
-console.log(a == b == c)
+let a = 1,
+    b = 1,
+    c = 1;
+console.log((a == b) == c)
+// numRoomCreep
+[
+    {
+        W41S22: { Harvester: 2, Carrier: 1, Builder: 0, Repairer: 0, Customer: 0, MineralHarvester: 0, Upgrader: 0 },
+        W41S23: { Harvester: 1, Carrier: 1, Builder: 0, Upgrader: 0, Repairer: 0, Customer: 0, MineralHarvester: 0 },
+    }
+];

@@ -1,7 +1,7 @@
 {
     "Harvester": {
         "name": "harvester",
-        "number": 2,
+        "number": 0,
         "body": [
             "WORK",
             "WORK",
@@ -154,7 +154,7 @@
     },
     "HCer": {
         "name": "hcer",
-        "number": 1,
+        "number": 0,
         "body": [
             "WORK",
             "WORK",
