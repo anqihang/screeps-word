@@ -171,10 +171,16 @@
                 },
                 "Carrier": {
                     "name": "carrier",
-                    "number": 1,
+                    "number": 2,
                     "body": [
                         "CARRY",
                         "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "CARRY",
+                        "MOVE",
+                        "MOVE",
                         "MOVE"
                     ],
                     "memory": {
@@ -220,7 +226,7 @@
                 },
                 "Repairer": {
                     "name": "repairer",
-                    "number": 0,
+                    "number": 1,
                     "body": [
                         "WORK",
                         "WORK",

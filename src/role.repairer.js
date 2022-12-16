@@ -4,7 +4,6 @@ import { assignTarget } from './assignTarget';
 export const repairer = {
     run: function ({ _creep, arr_repairer }) {
         if (withdraw.run({ _creep })) {
-
             /**
              *  @description 需要修复的建筑物(不包含wall)并按照hits递增排序
              */
@@ -34,7 +33,6 @@ export const repairer = {
 
             //
             if (targets.length > 0) {
-
                 //分配目标对象
                 assignTarget.run({ room: _creep.room.name, roleTarget: 'repairTarget', roleArr: arr_repairer, targets: targets });
 

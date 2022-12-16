@@ -21,7 +21,6 @@ const stateScanner = function () {
     Memory.stats.rclPrgress = Game.rooms["W41S22"].controller.progress / Game.rooms["W41S22"].controller.progressTotal;
 };
 //-----------------------------------------------------------------------------------------------------------------------
-
 //role
 import { harvester } from "./role.harvester";
 import { builder } from "./role.builder";
@@ -39,7 +38,6 @@ import { H_Cer } from "./Temporary/H_Cer";
 import { tower } from "./structure.tower";
 //config
 // import role_config from "./creeps.config.json";
-//
 import rooms_config from "./config/rooms.config.json";
 //############################################################################
 // Game.property.logMarketHistory = function () {
@@ -47,9 +45,6 @@ import rooms_config from "./config/rooms.config.json";
 // }
 //############################################################################
 //判断任务队列是否改变-第一个任务完成
-// Memory.carryTarget = "";
-// Memory.repairTarget = "";
-//
 Memory.targetTask = {};
 //判断每个房间的carrier不存在且房间能量小于300
 let noCarrierRooms = {};
@@ -67,9 +62,6 @@ for (const room in Game.rooms) {
 // }
 // Memory.W41S23_energyTotop = "3541111188888888888811111111111111181111211111";
 //
-//W41S22房间的矿
-let mineral_k = Game.rooms["W41S22"].find(FIND_MINERALS);
-
 /**
  * 将字符串变为变量
  * @param {Object} obj 转变的字符串对象数组
@@ -121,7 +113,7 @@ function f_tov(str) {
     return r;
 }
 /**
- * @description 按房间规划spawn的孵化
+ * @description 按房间规划spawn的孵化分配
  * @param {Object} room room配置
  * @param {Object} role role配置
  */
@@ -414,7 +406,6 @@ export const loop = function () {
             }
         }
     }
-    // console.log(1);
     //
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
     stateScanner();

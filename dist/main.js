@@ -327,7 +327,6 @@ const assignTarget = {
 const repairer = {
     run: function ({ _creep, arr_repairer }) {
         if (withdraw.run({ _creep })) {
-
             /**
              *  @description 需要修复的建筑物(不包含wall)并按照hits递增排序
              */
@@ -357,7 +356,6 @@ const repairer = {
 
             //
             if (targets.length > 0) {
-
                 //分配目标对象
                 assignTarget.run({ room: _creep.room.name, roleTarget: 'repairTarget', roleArr: arr_repairer, targets: targets });
 
@@ -399,17 +397,14 @@ const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-
-
-        //creep所在的房间的storage
-        let storage = _creep.room.find(FIND_STRUCTURES, {
-            filter: item => item.structureType == STRUCTURE_STORAGE
-        });
+        //根据距离排序
+        // structure_energy.sort((a, b) => {
+        //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+        //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+        // })
         // storage(建筑不需要资源后向storage运输resource)
         if (structure_energy.length == 0) {
-            structure_energy = _creep.room.find(FIND_STRUCTURES, {
-                filter: item => item.structureType == STRUCTURE_STORAGE
-            });
+            structure_energy = [_creep.room.storage];
             isStorage = true;
         }
         //切换targetIndex，保证任务完成时不会改变其他creep的任务目标
@@ -419,9 +414,8 @@ const carrier = {
         if (withdraw.run({ _creep, isStorage })) {
             //携带有k就传送k到storage
             if (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0) {
-                //根据creep自身的targetIndex选择目标
-                if (_creep.transfer(storage[_creep.memory.targetIndex], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
-                    _creep.moveTo(storage[_creep.memory.targetIndex], {
+                if (_creep.transfer(_creep.room.storage, RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(_creep.room.storage, {
                         visualizePathStyle: {
                             stroke: '#11a8cd',
                             opacity: .6
@@ -431,17 +425,23 @@ const carrier = {
             }
             //传送energy到需要的structure
             else {
+                // //根据距离排序
+                // structure_energy.sort((a, b) => {
+                //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+                // })
                 if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(structure_energy[_creep.memory.targetIndex], {
                         visualizePathStyle: {
                             stroke: '#11a8cd',
                             opacity: .6
                         }
-                    });//根据距离排序
-                    structure_energy.sort((a, b) => {
-                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
                     });
+                    //根据距离排序
+                    // structure_energy.sort((a, b) => {
+                    //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                    //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+                    // })
                 }
             }
         }
@@ -833,10 +833,16 @@ var roomsData = [
 			},
 			Carrier: {
 				name: "carrier",
-				number: 1,
+				number: 2,
 				body: [
 					"CARRY",
 					"CARRY",
+					"CARRY",
+					"CARRY",
+					"CARRY",
+					"CARRY",
+					"MOVE",
+					"MOVE",
 					"MOVE"
 				],
 				memory: {
@@ -882,7 +888,7 @@ var roomsData = [
 			},
 			Repairer: {
 				name: "repairer",
-				number: 0,
+				number: 1,
 				body: [
 					"WORK",
 					"WORK",
@@ -971,9 +977,6 @@ const stateScanner = function () {
 // }
 //############################################################################
 //判断任务队列是否改变-第一个任务完成
-// Memory.carryTarget = "";
-// Memory.repairTarget = "";
-//
 Memory.targetTask = {};
 //判断每个房间的carrier不存在且房间能量小于300
 let noCarrierRooms = {};
@@ -983,16 +986,6 @@ for (const room in Game.rooms) {
     Memory.targetTask[room].repairTarget = "";
     noCarrierRooms[room] = false;
 }
-//缓存的路径|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|/\|\/|
-// let path = [];
-// if (Game.rooms["W41S23"]) {
-//     path = Game.rooms["W41S23"].findPath(new RoomPosition(35, 42, "W41S23"), new RoomPosition(23, 0, "W41S23"));
-//     path = Room.serializePath(path);
-// }
-// Memory.W41S23_energyTotop = "3541111188888888888811111111111111181111211111";
-//
-//W41S22房间的矿
-Game.rooms["W41S22"].find(FIND_MINERALS);
 /**
  * @description 将身体部件字符串转化为变量
  * @param {Array} str body组件字符串数组
@@ -1031,7 +1024,7 @@ function f_tov(str) {
     return r;
 }
 /**
- * @description 按房间规划spawn的孵化
+ * @description 按房间规划spawn的孵化分配
  * @param {Object} room room配置
  * @param {Object} role role配置
  */
@@ -1321,7 +1314,6 @@ const loop = function () {
             }
         }
     }
-    // console.log(1);
     //
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
     stateScanner();
