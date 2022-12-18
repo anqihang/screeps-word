@@ -397,11 +397,11 @@ const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        //根据距离排序
-        // structure_energy.sort((a, b) => {
-        //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-        //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        // })
+        // 根据距离排序
+        structure_energy.sort((a, b) => {
+            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+        });
         // storage(建筑不需要资源后向storage运输resource)
         if (structure_energy.length == 0) {
             structure_energy = [_creep.room.storage];
@@ -425,7 +425,7 @@ const carrier = {
             }
             //传送energy到需要的structure
             else {
-                // //根据距离排序
+                //根据距离排序
                 // structure_energy.sort((a, b) => {
                 //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
                 //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
@@ -437,11 +437,6 @@ const carrier = {
                             opacity: .6
                         }
                     });
-                    //根据距离排序
-                    // structure_energy.sort((a, b) => {
-                    //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                    //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-                    // })
                 }
             }
         }
@@ -508,6 +503,15 @@ const attacker = {
         }
         if (Game.creeps.attack.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
             Game.creeps.attack.moveTo(enemies[0]);
+        }
+    }
+};
+
+const exploit_attacker = {
+    run: function ({ _creep, _roomName }) {
+        let enemies = Game.rooms[_roomName].find(FIND_HOSTILE_CREEPS);
+        if (_creep.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
+            _creep.moveTo(enemies[0]);
         }
     }
 };
@@ -971,6 +975,11 @@ const stateScanner = function () {
     //rcl
     Memory.stats.rclPrgress = Game.rooms["W41S22"].controller.progress / Game.rooms["W41S22"].controller.progressTotal;
 };
+//对象类型的配置
+const rooms_config_Object = {};
+for (const iterator of rooms_config.roomsData) {
+    rooms_config_Object[iterator.roomName] = iterator;
+}
 //############################################################################
 // Game.property.logMarketHistory = function () {
 //     Game.market.outgoingTransactions()
@@ -1176,37 +1185,6 @@ const loop = function () {
             }
         }
     }
-    //根据config生成新creep
-    //#region
-    // for (const key in role_config) {
-    //     let role = role_config[key];
-    //     if (getVerb(num, `num_${role.name}`).length < role.number) {
-    //         let index = Math.floor(Math.random() * 10);
-    //         //建造-有施工地时孵化
-    //         // if (structure_site_all.length > 0 && role.name == "builder") {
-    //         //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //         //采矿-矿有资源时孵化
-    //         // else
-    //         // if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
-    //         //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //         //外能量-有外房间时孵化
-    //         // else
-    //         if (moreRoom && role.name == "outharvester") {
-    //             Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
-    //         }
-    //         //外房运输energy-有外房间时孵化
-    //         else if (role.name == "hcer" && moreRoom) {
-    //             Game.spawns["Spawn_W41S23"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
-    //         }
-    //         //除建筑/采矿/外能量
-    //         // else if (role.name != "builder" && role.name != "mineralharvester" && role.name != "outharvester") {
-    //         //     Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //     } 
-    // }
-    //#endregion
     /**
      * @description 孵化creep
      */
@@ -1307,6 +1285,9 @@ const loop = function () {
                         break;
                     case "HCer": {
                         H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
+                    }
+                    case "E_Attacker": {
+                        exploit_attacker.run({ _creep, _roomName: rooms_config_Object[room].creeps.E_Attacker.targetRoom });
                     }
                 }
                 //     //存活时间小于10显示气泡

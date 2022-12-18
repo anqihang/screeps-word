@@ -1,4 +1,4 @@
-import { withdraw } from './withdraw';
+import { withdraw } from '../base/withdraw';
 
 export const customer = {
     /** 

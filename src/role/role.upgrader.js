@@ -1,6 +1,6 @@
 //升级controller
-import { harvest } from './harvest';
-import { withdraw } from './withdraw';
+import { harvest } from '../base/harvest';
+import { withdraw } from '../base/withdraw';
 
 export const upgrader = {
     run: function (_creep) {

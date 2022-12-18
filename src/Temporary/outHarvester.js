@@ -1,5 +1,5 @@
 //新房间采能量升级controller--外矿（能量）的开采
-import { harvest } from "../harvest";
+import { harvest } from "../base/harvest";
 export const outHarvester = {
     run: function ({ _creep, _room }) {
         if (harvest.run({ _creep, _target: _room.find(FIND_SOURCES_ACTIVE) })) {

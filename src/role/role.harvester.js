@@ -1,4 +1,4 @@
-import { harvest } from "./harvest";
+import { harvest } from "../base/harvest";
 
 export const harvester = {
     /**

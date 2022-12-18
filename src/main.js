@@ -22,23 +22,30 @@ const stateScanner = function () {
 };
 //-----------------------------------------------------------------------------------------------------------------------
 //role
-import { harvester } from "./role.harvester";
-import { builder } from "./role.builder";
-import { upgrader } from "./role.upgrader";
-import { repairer } from "./role.repairer";
-import { carrier } from "./role.carrier";
-import { customer } from "./role.customer";
-import { mineral_harvester } from "./role.mineral.harvester";
+import { harvester } from "./role/role.harvester";
+import { builder } from "./role/role.builder";
+import { upgrader } from "./role/role.upgrader";
+import { repairer } from "./role/role.repairer";
+import { carrier } from "./role/role.carrier";
+import { customer } from "./role/role.customer";
+import { mineral_harvester } from "./role/role.mineral.harvester";
 import { attacker } from "./role/role.attacker";
+//exploit
+import { exploit_attacker } from "./exploit/exploit_attack";
 //扩张
-import { claimer } from "./role.claimer";
+import { claimer } from "./role/role.claimer";
 import { outHarvester } from "./Temporary/outHarvester";
 import { H_Cer } from "./Temporary/H_Cer";
 //structure
-import { tower } from "./structure.tower";
+import { tower } from "./structure/structure.tower";
 //config
 // import role_config from "./creeps.config.json";
 import rooms_config from "./config/rooms.config.json";
+//对象类型的配置
+const rooms_config_Object = {};
+for (const iterator of rooms_config.roomsData) {
+    rooms_config_Object[iterator.roomName] = iterator;
+}
 //############################################################################
 // Game.property.logMarketHistory = function () {
 //     Game.market.outgoingTransactions()
@@ -265,37 +272,6 @@ export const loop = function () {
             }
         }
     }
-    //根据config生成新creep
-    //#region
-    // for (const key in role_config) {
-    //     let role = role_config[key];
-    //     if (getVerb(num, `num_${role.name}`).length < role.number) {
-    //         let index = Math.floor(Math.random() * 10);
-    //         //建造-有施工地时孵化
-    //         // if (structure_site_all.length > 0 && role.name == "builder") {
-    //         //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //         //采矿-矿有资源时孵化
-    //         // else
-    //         // if (role.name == "mineralharvester" && mineral_k[0].mineralAmount > 0) {
-    //         //     Game.spawns["Spawn0"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //         //外能量-有外房间时孵化
-    //         // else
-    //         if (moreRoom && role.name == "outharvester") {
-    //             Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
-    //         }
-    //         //外房运输energy-有外房间时孵化
-    //         else if (role.name == "hcer" && moreRoom) {
-    //             Game.spawns["Spawn_W41S23"].spawnCreep(f_tov(role.body), `${role.name}_W41S23_${index}`, { memory: role.memory });
-    //         }
-    //         //除建筑/采矿/外能量
-    //         // else if (role.name != "builder" && role.name != "mineralharvester" && role.name != "outharvester") {
-    //         //     Game.spawns["Spawn_W41S22_1"].spawnCreep(f_tov(role.body), `${role.name}_W41S22_${index}`, { memory: role.memory });
-    //         // }
-    //     } 
-    // }
-    //#endregion
     /**
      * @description 孵化creep
      */
@@ -396,6 +372,9 @@ export const loop = function () {
                         break;
                     case "HCer": {
                         H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
+                    }
+                    case "E_Attacker": {
+                        exploit_attacker.run({ _creep, _roomName: rooms_config_Object[room].creeps.E_Attacker.targetRoom })
                     }
                     //
                     default:

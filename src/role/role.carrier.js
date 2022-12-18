@@ -1,5 +1,5 @@
-import { withdraw } from "./withdraw";
-import { assignTarget } from "./assignTarget";
+import { withdraw } from "../base/withdraw";
+import { assignTarget } from "../util/assignTarget";
 
 export const carrier = {
     /**
@@ -24,11 +24,11 @@ export const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        //根据距离排序
-        // structure_energy.sort((a, b) => {
-        //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-        //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        // })
+        // 根据距离排序
+        structure_energy.sort((a, b) => {
+            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+        })
         // storage(建筑不需要资源后向storage运输resource)
         if (structure_energy.length == 0) {
             structure_energy = [_creep.room.storage];
@@ -52,7 +52,7 @@ export const carrier = {
             }
             //传送energy到需要的structure
             else {
-                // //根据距离排序
+                //根据距离排序
                 // structure_energy.sort((a, b) => {
                 //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
                 //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
@@ -64,11 +64,6 @@ export const carrier = {
                             opacity: .6
                         }
                     });
-                    //根据距离排序
-                    // structure_energy.sort((a, b) => {
-                    //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                    //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-                    // })
                 }
             }
         }

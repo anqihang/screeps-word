@@ -1,6 +1,6 @@
 // const harvester = require('role.harvester');
-import { harvest } from './harvest';
-import { withdraw } from './withdraw';
+import { harvest } from '../base/harvest';
+import { withdraw } from '../base/withdraw';
 export const builder = {
     /**
      * @description 建造者

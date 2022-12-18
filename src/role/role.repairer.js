@@ -1,5 +1,5 @@
-import { withdraw } from './withdraw';
-import { assignTarget } from './assignTarget';
+import { withdraw } from '../base/withdraw';
+import { assignTarget } from '../util/assignTarget';
 
 export const repairer = {
     run: function ({ _creep, arr_repairer }) {

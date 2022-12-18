@@ -1,5 +1,5 @@
 //新房间挖能量运输能量
-import { harvest } from "../harvest";
+import { harvest } from "../base/harvest";
 
 export const H_Cer = {
     /**
