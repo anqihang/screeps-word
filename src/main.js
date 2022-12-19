@@ -374,6 +374,7 @@ export const loop = function () {
                         H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
                     }
                     case "E_Attacker": {
+                        // console.log(JSON.stringify(rooms_config_Object[room].creeps.E_Attacker));
                         exploit_attacker.run({ _creep, _roomName: rooms_config_Object[room].creeps.E_Attacker.targetRoom })
                     }
                     //

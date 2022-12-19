@@ -138,14 +138,72 @@
 // let a = 'harvester'
 // let b = 'harvester_w41s22'
 // console.log(new RegExp(`^harvester`).test(b));
-let a = 1,
-    b = 1,
-    c = 1;
-console.log((a == b) == c)
-// numRoomCreep
+// let a = 1,
+//     b = 1,
+//     c = 1;
+// console.log((a == b) == c)
+// // numRoomCreep
+// [
+//     {
+//         W41S22: { Harvester: 2, Carrier: 1, Builder: 0, Repairer: 0, Customer: 0, MineralHarvester: 0, Upgrader: 0 },
+//         W41S23: { Harvester: 1, Carrier: 1, Builder: 0, Upgrader: 0, Repairer: 0, Customer: 0, MineralHarvester: 0 },
+//     }
+// ];
 [
     {
-        W41S22: { Harvester: 2, Carrier: 1, Builder: 0, Repairer: 0, Customer: 0, MineralHarvester: 0, Upgrader: 0 },
-        W41S23: { Harvester: 1, Carrier: 1, Builder: 0, Upgrader: 0, Repairer: 0, Customer: 0, MineralHarvester: 0 },
-    }
+        Harvester: {
+            name: "harvester",
+            number: 1,
+            body: ["WORK", "WORK", "WORK", "WORK", "WORK", "WORK", "CARRY", "CARRY", "MOVE", "MOVE", "MOVE", "MOVE"],
+            memory: { role: "Harvester", targetIndex: 0 },
+        },
+        Carrier: {
+            name: "carrier",
+            number: 2,
+            body: ["CARRY", "CARRY", "CARRY", "CARRY", "CARRY", "CARRY", "MOVE", "MOVE", "MOVE"],
+            memory: { role: "Carrier", targetIndex: 0 },
+        },
+        Builder: {
+            name: "builder",
+            number: 2,
+            body: ["WORK", "WORK", "CARRY", "CARRY", "CARRY", "CARRY", "MOVE", "MOVE", "MOVE"],
+            memory: { role: "Builder" },
+        },
+        Upgrader: {
+            name: "upgrader",
+            number: 3,
+            body: ["WORK", "WORK", "CARRY", "CARRY", "CARRY", "CARRY", "MOVE", "MOVE", "MOVE"],
+            memory: { role: "Upgrader" },
+        },
+        Repairer: {
+            name: "repairer",
+            number: 1,
+            body: ["WORK", "WORK", "CARRY", "CARRY", "CARRY", "CARRY", "CARRY", "CARRY", "MOVE", "MOVE", "MOVE", "MOVE"],
+            memory: { role: "Repairer", targetIndex: "0" },
+        },
+        Customer: {
+            name: "customer",
+            number: 0,
+            body: ["WORK", "WORK", "CARRY", "MOVE", "MOVE"],
+            memory: { role: "Customer" },
+            target: "_creep.room.controller",
+            origin: "_creep.room.storage",
+            method: "transfer",
+            resource: "RESOURCE_ENERGY",
+            amount: 100,
+        },
+        MineralHarvester: {
+            name: "mineralharvester",
+            number: 0,
+            body: ["WORK", "WORK", "WORK", "CARRY", "MOVE"],
+            memory: { role: "MineralHarvester" },
+        },
+        "E_Attacker": {
+            name: "exploit_attacker",
+            number: 1,
+            targetRoom: "W42S23",
+            body: ["ATTACK", "MOVE"],
+            memory: { role: "E_Attacker" },
+        },
+    },
 ];

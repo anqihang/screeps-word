@@ -208,7 +208,7 @@
                 },
                 "Upgrader": {
                     "name": "upgrader",
-                    "number": 3,
+                    "number": 4,
                     "body": [
                         "WORK",
                         "WORK",
@@ -277,6 +277,18 @@
                     ],
                     "memory": {
                         "role": "MineralHarvester"
+                    }
+                },
+                "E_Attacker": {
+                    "name": "exploit_attacker",
+                    "number": 0,
+                    "targetRoom": "W42S23",
+                    "body": [
+                        "ATTACK",
+                        "MOVE"
+                    ],
+                    "memory": {
+                        "role": "E_Attacker"
                     }
                 }
             }

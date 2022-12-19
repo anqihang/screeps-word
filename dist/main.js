@@ -509,10 +509,14 @@ const attacker = {
 
 const exploit_attacker = {
     run: function ({ _creep, _roomName }) {
-        let enemies = Game.rooms[_roomName].find(FIND_HOSTILE_CREEPS);
+        // if (!Game.rooms[_roomName]) {
+        //     // _creep.moveTo(new RoomPosition(25, 25, _roomName));
+        // } else {
+        let enemies = Game.rooms[_roomName].find(FIND_HOSTILE_CREEPS || FIND_HOSTILE_STRUCTURES);
         if (_creep.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
             _creep.moveTo(enemies[0]);
         }
+        // }
     }
 };
 
@@ -874,7 +878,7 @@ var roomsData = [
 			},
 			Upgrader: {
 				name: "upgrader",
-				number: 3,
+				number: 4,
 				body: [
 					"WORK",
 					"WORK",
@@ -943,6 +947,18 @@ var roomsData = [
 				],
 				memory: {
 					role: "MineralHarvester"
+				}
+			},
+			E_Attacker: {
+				name: "exploit_attacker",
+				number: 0,
+				targetRoom: "W42S23",
+				body: [
+					"ATTACK",
+					"MOVE"
+				],
+				memory: {
+					role: "E_Attacker"
 				}
 			}
 		}
@@ -1287,6 +1303,7 @@ const loop = function () {
                         H_Cer.run({ _creep, _room: Game.rooms["W41S23"] });
                     }
                     case "E_Attacker": {
+                        // console.log(JSON.stringify(rooms_config_Object[room].creeps.E_Attacker));
                         exploit_attacker.run({ _creep, _roomName: rooms_config_Object[room].creeps.E_Attacker.targetRoom });
                     }
                 }
