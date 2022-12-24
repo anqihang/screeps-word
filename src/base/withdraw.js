@@ -22,11 +22,11 @@ export const withdraw = {
         });
         /**
          * @description 有k矿的container建筑【arr】
-         * @param {Array} container_mineral
+         * @param {Array} containers_mineral
          */
         let containers_mineral = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
-                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_KEANIUM) > 300;
+                return item.structureType == STRUCTURE_CONTAINER && (item.store.getUsedCapacity(RESOURCE_KEANIUM) > 300 || item.store.getUsedCapacity(RESOURCE_OXYGEN) > 300);
             }
         });
 
@@ -45,15 +45,16 @@ export const withdraw = {
         });
         //全都没有矿物为true
         noMineral = containers_mineral.every(element => {
-            return element.store.getUsedCapacity(RESOURCE_KEANIUM) == 0;
+            return element.store.getUsedCapacity(RESOURCE_KEANIUM) == 0 && element.store.getUsedCapacity(RESOURCE_OXYGEN) == 0;
         });
+        // console.log(noMineral);
 
         //判断工作状态
         if (_creep.memory.working && _creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = false;
         } else if (!_creep.memory.working && _creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = true;
-        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && noEnergy) || (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 && noMineral)) {//自己身上有container没有能量
+        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && noEnergy) || ((_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 || _creep.store.getUsedCapacity(RESOURCE_OXYGEN) > 0) && noMineral)) {//自己身上有container没有能量
             return true;
             //container都空了而自身携带有一些
         }
@@ -94,6 +95,15 @@ export const withdraw = {
             //container没energy后有k拿取k
             else if (!noMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
                 if (_creep.withdraw(containers_mineral[0], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(containers_mineral[0], {
+                        visualizePathStyle: {
+                            stroke: "#906efa",
+                            opacity: .3
+                        }
+                    })
+                }
+                //container没energy后有O拿取O
+                else if (_creep.withdraw(containers_mineral[0], RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers_mineral[0], {
                         visualizePathStyle: {
                             stroke: "#906efa",

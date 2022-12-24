@@ -24,11 +24,6 @@ export const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        // 根据距离排序
-        structure_energy.sort((a, b) => {
-            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        })
         // storage(建筑不需要资源后向storage运输resource)
         if (structure_energy.length == 0) {
             structure_energy = [_creep.room.storage];
@@ -50,13 +45,20 @@ export const carrier = {
                     })
                 }
             }
+            //
+            else if (_creep.store.getUsedCapacity(RESOURCE_OXYGEN) > 0) {
+                if (_creep.transfer(_creep.room.storage, RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(_creep.room.storage, {
+                        visualizePathStyle: {
+                            stroke: '#11a8cd',
+                            opacity: .6
+                        }
+                    })
+                }
+            }
             //传送energy到需要的structure
             else {
-                //根据距离排序
-                // structure_energy.sort((a, b) => {
-                //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-                // })
+
                 if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(structure_energy[_creep.memory.targetIndex], {
                         visualizePathStyle: {
@@ -64,6 +66,14 @@ export const carrier = {
                             opacity: .6
                         }
                     });
+                }
+                //开始传输energy
+                else if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == 0) {
+                    //根据距离排序
+                    structure_energy.sort((a, b) => {
+                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+                    })
                 }
             }
         }

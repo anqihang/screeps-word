@@ -312,7 +312,7 @@ export const loop = function () {
             if (key.includes(room)) {
                 let _creep = Game.creeps[key];
                 //自身检查是否被攻击了并发出孵化attack指令
-                _creep.wasAttacked({ _creep });
+                // _creep.wasAttacked({ _creep, _room: room });
 
                 switch (_creep.memory.role) {
                     case "Harvester":

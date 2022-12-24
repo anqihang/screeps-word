@@ -100,11 +100,11 @@ const withdraw = {
         });
         /**
          * @description 有k矿的container建筑【arr】
-         * @param {Array} container_mineral
+         * @param {Array} containers_mineral
          */
         let containers_mineral = _creep.room.find(FIND_STRUCTURES, {
             filter: item => {
-                return item.structureType == STRUCTURE_CONTAINER && item.store.getUsedCapacity(RESOURCE_KEANIUM) > 300;
+                return item.structureType == STRUCTURE_CONTAINER && (item.store.getUsedCapacity(RESOURCE_KEANIUM) > 300 || item.store.getUsedCapacity(RESOURCE_OXYGEN) > 300);
             }
         });
 
@@ -123,15 +123,16 @@ const withdraw = {
         });
         //全都没有矿物为true
         noMineral = containers_mineral.every(element => {
-            return element.store.getUsedCapacity(RESOURCE_KEANIUM) == 0;
+            return element.store.getUsedCapacity(RESOURCE_KEANIUM) == 0 && element.store.getUsedCapacity(RESOURCE_OXYGEN) == 0;
         });
+        // console.log(noMineral);
 
         //判断工作状态
         if (_creep.memory.working && _creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = false;
         } else if (!_creep.memory.working && _creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
             _creep.memory.working = true;
-        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && noEnergy) || (_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 && noMineral)) {//自己身上有container没有能量
+        } else if ((_creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && noEnergy) || ((_creep.store.getUsedCapacity(RESOURCE_KEANIUM) > 0 || _creep.store.getUsedCapacity(RESOURCE_OXYGEN) > 0) && noMineral)) {//自己身上有container没有能量
             return true;
             //container都空了而自身携带有一些
         }
@@ -172,6 +173,15 @@ const withdraw = {
             //container没energy后有k拿取k
             else if (!noMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
                 if (_creep.withdraw(containers_mineral[0], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(containers_mineral[0], {
+                        visualizePathStyle: {
+                            stroke: "#906efa",
+                            opacity: .3
+                        }
+                    });
+                }
+                //container没energy后有O拿取O
+                else if (_creep.withdraw(containers_mineral[0], RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers_mineral[0], {
                         visualizePathStyle: {
                             stroke: "#906efa",
@@ -339,13 +349,15 @@ const repairer = {
                 //按照hits递增排序
                 targets.sort((a, b) => a.hits - b.hits);
                 //按照距离远近排序
-                targets.sort((a, b) => {
-                    return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                        Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-                });
+                if (_creep.repair(targets[_creep.memory.targetIndex]) == 0) {
+                    targets.sort((a, b) => {
+                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
+                    });
+                }
             }
             //没有targets后修复wall
-            if (targets.length == 0) {
+            else if (targets.length == 0) {
                 targets = _creep.room.find(FIND_STRUCTURES, {
                     filter: item => {
                         return item.hits < item.hitsMax && item.structureType == STRUCTURE_WALL;
@@ -397,11 +409,6 @@ const carrier = {
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
-        // 根据距离排序
-        structure_energy.sort((a, b) => {
-            return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-        });
         // storage(建筑不需要资源后向storage运输resource)
         if (structure_energy.length == 0) {
             structure_energy = [_creep.room.storage];
@@ -423,19 +430,34 @@ const carrier = {
                     });
                 }
             }
+            //
+            else if (_creep.store.getUsedCapacity(RESOURCE_OXYGEN) > 0) {
+                if (_creep.transfer(_creep.room.storage, RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(_creep.room.storage, {
+                        visualizePathStyle: {
+                            stroke: '#11a8cd',
+                            opacity: .6
+                        }
+                    });
+                }
+            }
             //传送energy到需要的structure
             else {
-                //根据距离排序
-                // structure_energy.sort((a, b) => {
-                //     return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
-                //         Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
-                // })
+
                 if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(structure_energy[_creep.memory.targetIndex], {
                         visualizePathStyle: {
                             stroke: '#11a8cd',
                             opacity: .6
                         }
+                    });
+                }
+                //开始传输energy
+                else if (_creep.transfer(structure_energy[_creep.memory.targetIndex], RESOURCE_ENERGY) == 0) {
+                    //根据距离排序
+                    structure_energy.sort((a, b) => {
+                        return Math.sqrt((a.pos.x - _creep.pos.x) ** 2 + (a.pos.y - _creep.pos.y) ** 2) -
+                            Math.sqrt((b.pos.x - _creep.pos.x) ** 2 + (b.pos.y - _creep.pos.y) ** 2)
                     });
                 }
             }
@@ -496,11 +518,9 @@ const mineral_harvester = {
 };
 
 const attacker = {
-    run: function ({ _creep }) {
+    run: function ({ _creep, _room }) {
         let enemies = _creep.room.find(FIND_HOSTILE_CREEPS);
-        if (!Game.creeps.attack) {
-            Game.spawns['Spawn0'].spawnCreep([ATTACK, ATTACK, MOVE, MOVE], 'attack');
-        }
+        if (!Game.creeps.attack) ;
         if (Game.creeps.attack.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
             Game.creeps.attack.moveTo(enemies[0]);
         }
@@ -878,7 +898,7 @@ var roomsData = [
 			},
 			Upgrader: {
 				name: "upgrader",
-				number: 4,
+				number: 3,
 				body: [
 					"WORK",
 					"WORK",
@@ -937,7 +957,7 @@ var roomsData = [
 			},
 			MineralHarvester: {
 				name: "mineralharvester",
-				number: 0,
+				number: 1,
 				body: [
 					"WORK",
 					"WORK",
@@ -1241,7 +1261,7 @@ const loop = function () {
             if (key.includes(room)) {
                 let _creep = Game.creeps[key];
                 //自身检查是否被攻击了并发出孵化attack指令
-                _creep.wasAttacked({ _creep });
+                // _creep.wasAttacked({ _creep, _room: room });
 
                 switch (_creep.memory.role) {
                     case "Harvester":
