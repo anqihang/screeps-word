@@ -20,6 +20,11 @@ const stateScanner = function () {
     //rcl
     Memory.stats.rclPrgress = Game.rooms["W41S22"].controller.progress / Game.rooms["W41S22"].controller.progressTotal;
 };
+//
+
+// Game.prototype.lo = function () {
+//     console.log('a');
+// }
 //-----------------------------------------------------------------------------------------------------------------------
 //role
 import { harvester } from "./role/role.harvester";
@@ -275,6 +280,7 @@ export const loop = function () {
     /**
      * @description 孵化creep
      */
+    // !孵化
     for (const room of rooms_config.roomsData) {
         //一个房间的配置
         let numCreep = numRoomCreep[room.roomName];
@@ -299,6 +305,10 @@ export const loop = function () {
                 else if (role.name == "hcer" && room.roomStyle == 'exploit') {
                     f_spawnCreep(room, role);
                 }
+                //控制从storage向terimal转移能量和矿物
+                else if (role.name == "customer" && Game.rooms[room.roomName].storage.store.getUsedCapacity(RESOURCE_KEANIUM) > 10000) {
+                    f_spawnCreep(room, role);
+                }
                 //除建筑/采矿/外能量/外能量运输
                 else if (role.name != "builder" && role.name != "mineralharvester" && role.name != "outharvester" && role.name != 'hcer') {
                     f_spawnCreep(room, role);
@@ -309,6 +319,7 @@ export const loop = function () {
     //分配creep任务
     for (const room in Game.rooms) {
         for (const key in Game.creeps) {
+            //判断creep属于哪个room
             if (key.includes(room)) {
                 let _creep = Game.creeps[key];
                 //自身检查是否被攻击了并发出孵化attack指令
@@ -348,15 +359,36 @@ export const loop = function () {
                     //自定义
                     case "Customer":
                         {
-                            customer.run({
-                                _creep,
-                                _target: _creep.room.terminal,
-                                _origin: _creep.room.storage,
-                                _method: "transfer",
-                                _resource: RESOURCE_ENERGY,
-                                //大于容量会停止widthdraw
-                                _amount: 50,
-                            });
+                            //不同房间匹配不同的资源
+                            let __resource;
+                            switch (room) {
+                                case 'W41S22': __resource = RESOURCE_KEANIUM;
+                                    break;
+                                case 'W41S23': __resource = RESOURCE_OXYGEN;
+                                    break;
+                                default: ; break;
+                            }
+                            if (Game.rooms[room].terminal.store.getUsedCapacity(RESOURCE_ENERGY) < 160000 && Game.rooms[room].storage.store.getUsedCapacity(RESOURCE_ENERGY) > 600000) {
+                                customer.run({
+                                    _creep,
+                                    _target: _creep.room.terminal,
+                                    _origin: _creep.room.storage,
+                                    _method: "transfer",
+                                    _resource: RESOURCE_ENERGY,
+                                    //大于容量会停止widthdraw
+                                    _amount: 100,
+                                });
+                            } else {
+                                customer.run({
+                                    _creep,
+                                    _target: _creep.room.terminal,
+                                    _origin: _creep.room.storage,
+                                    _method: "transfer",
+                                    _resource: __resource,
+                                    //大于容量会停止widthdraw
+                                    _amount: 100,
+                                });
+                            }
                         }
                         break;
                     //扩张
@@ -378,15 +410,68 @@ export const loop = function () {
                         exploit_attacker.run({ _creep, _roomName: rooms_config_Object[room].creeps.E_Attacker.targetRoom })
                     }
                     //
-                    default:
+                    default: ;
                         break;
                 }
                 //     //存活时间小于10显示气泡
                 if (_creep.ticksToLive < 10) _creep.say(_creep.ticksToLive);
             }
         }
+        //交易
+
     }
     //
     // Game.spawns['Spawn0'].spawnCreep([WORK,CARRY,MOVE], 'Customer', { memory: { role: 'Customer' } });
     stateScanner();
+    // function aa() {
+    // console.log('startMarket');
+    if (Game.rooms['W41S22'].terminal.store.getUsedCapacity(RESOURCE_KEANIUM) > 1000) {
+        let market_list = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_KEANIUM }).sort((a, b) => {
+            return b.price - a.price;
+        });
+        let market_order_list = [];
+        for (const iterator of market_list) {
+            if (iterator.price < 1) {
+                break;
+            }
+            if (iterator.amount != 0 && iterator.price > 1) {
+                let obj = {}
+                obj.id = iterator.id;
+                obj.amount = iterator.amount;
+                market_order_list.push(obj);
+            }
+        }
+        // console.log(market_order_list);
+        if (market_order_list.length > 0) {
+            if (Game.rooms['W41S22'].terminal.store.getUsedCapacity(RESOURCE_KEANIUM) > 1000) {
+                Game.market.deal(market_order_list[0].id, market_order_list[0].amount, 'W41S22');
+            }
+        }
+    }
+    else if (Game.rooms['W41S22'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 100000 &&
+        Game.rooms['W41S22'].storage.store.getUsedCapacity(RESOURCE_ENERGY) > 600000) {
+        let market_list = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY }).sort((a, b) => {
+            return b.price - a.price;
+        });
+        let market_order_list = [];
+        for (const iterator of market_list) {
+            if (iterator.price < 10) {
+                break;
+            }
+            if (iterator.amount != 0 && iterator.price > 10) {
+                let obj = {}
+                obj.id = iterator.id;
+                obj.amount = iterator.amount;
+                market_order_list.push(obj);
+            }
+        }
+        // console.log(market_order_list);
+        if (market_order_list.length > 0) {
+            if (Game.rooms['W41S22'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 1000) {
+                Game.market.deal(market_order_list[0].id, market_order_list[0].amount, 'W41S22');
+            }
+        }
+    }
+    // }
 };
+

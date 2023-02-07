@@ -15,15 +15,16 @@ export const builder = {
                  */
                 // let construction = _creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 //所有房间的施工地
-                let construction = [];
+                let construction = {};
                 for (const key in Game.rooms) {
-                    construction.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES))
+                    construction[key] = [...Game.rooms[key].find(FIND_CONSTRUCTION_SITES)];
+                    // construction.push(...Game.rooms[key].find(FIND_CONSTRUCTION_SITES))
                 }
                 // construction = Game.rooms['W41S23'].find(FIND_CONSTRUCTION_SITES);
                 // construction.sort((a, b) => a.progressTotal - b.progressTotal);
-                if (construction.length) {
-                    if (_creep.build(construction[0]) == ERR_NOT_IN_RANGE) {
-                        _creep.moveTo(construction[0], {
+                if (construction[_creep.room.name].length) {
+                    if (_creep.build(construction[_creep.room.name][0]) == ERR_NOT_IN_RANGE) {
+                        _creep.moveTo(construction[_creep.room.name][0], {
                             visualizePathStyle: {
                                 stroke: "#23d08a",
                                 opacity: .6

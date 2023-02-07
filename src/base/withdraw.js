@@ -81,19 +81,8 @@ export const withdraw = {
             // }
             //#endregion
 
-            //container有energy时拿取container的energy//10.31只有carrier能在container拿取
-            if (!noEnergy && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
-                if (_creep.withdraw(containers_energy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    _creep.moveTo(containers_energy[0], {
-                        visualizePathStyle: {
-                            stroke: "#ffffff",
-                            opacity: .3
-                        }
-                    });
-                }
-            }
             //container没energy后有k拿取k
-            else if (!noMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
+            if (!noMineral && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
                 if (_creep.withdraw(containers_mineral[0], RESOURCE_KEANIUM) == ERR_NOT_IN_RANGE) {
                     _creep.moveTo(containers_mineral[0], {
                         visualizePathStyle: {
@@ -110,6 +99,17 @@ export const withdraw = {
                             opacity: .3
                         }
                     })
+                }
+            }
+            //container有energy时拿取container的energy//10.31只有carrier能在container拿取
+            else if (!noEnergy && _creep.memory.role == 'Carrier' && _creep.store.getFreeCapacity() > 0) {
+                if (_creep.withdraw(containers_energy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    _creep.moveTo(containers_energy[0], {
+                        visualizePathStyle: {
+                            stroke: "#ffffff",
+                            opacity: .3
+                        }
+                    });
                 }
             }
             //container没有energy后拿取storage的energy(运输目标是storage时不执行，自定义resource时不执行)

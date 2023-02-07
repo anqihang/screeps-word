@@ -20,15 +20,25 @@ export const carrier = {
             filter: item => {
                 return (item.structureType == STRUCTURE_EXTENSION ||
                     item.structureType == STRUCTURE_SPAWN ||
-                    item.structureType == STRUCTURE_TOWER) &&
+                    item.structureType == STRUCTURE_TOWER ||
+                    item.structureType == STRUCTURE_NUKER) &&
                     item.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         }).sort((a, b) => a.store.getCapacity(RESOURCE_ENERGY) - b.store.getCapacity(RESOURCE_ENERGY));
         // storage(建筑不需要资源后向storage运输resource)
-        if (structure_energy.length == 0) {
+        if (structure_energy.length == 0
+            // && _creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) < 800000
+        ) {
             structure_energy = [_creep.room.storage];
             isStorage = true;
         }
+        // else if (structure_energy.length == 0) {
+        //     structure_energy = _creep.room.find(FIND_STRUCTURES, {
+        //         filter: item => {
+        //             return item.structureType == STRUCTURE_FACTORY;
+        //         }
+        //     });
+        // }
         //切换targetIndex，保证任务完成时不会改变其他creep的任务目标
         assignTarget.run({ room: _creep.room.name, roleTarget: 'carryTarget', roleArr: arr_carrier, targets: structure_energy });
 
