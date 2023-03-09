@@ -6,6 +6,7 @@
             "roomStyle": "complate",
             "roomLevel": 7,
             "creepnum": 0,
+            "resource": "RESOURCE_KEANIUM",
             "creeps": {
                 "Harvester": {
                     "name": "harvester",
@@ -101,8 +102,6 @@
                     "name": "customer",
                     "number": 1,
                     "body": [
-                        "WORK",
-                        "WORK",
                         "CARRY",
                         "CARRY",
                         "MOVE"
@@ -155,6 +154,7 @@
             "roomStyle": "complate",
             "roomLevel": 7,
             "creepnum": 0,
+            "resource": "RESOURCE_OXYGEN",
             "creeps": {
                 "Harvester": {
                     "name": "harvester",
@@ -259,8 +259,7 @@
                     "name": "customer",
                     "number": 1,
                     "body": [
-                        "WORK",
-                        "WORK",
+                        "CARRY",
                         "CARRY",
                         "MOVE",
                         "MOVE"

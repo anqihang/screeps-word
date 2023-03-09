@@ -4,10 +4,10 @@ export const withdraw = {
     /**
      * @description 拿取
      * @param {*} _creep 
-     * @param {*} _container 拿取energy的对象 (选填)
+     * @param {*} _container 拿取energy的目标对象 (选填)
      * @param {Boolean} isStorage 是否是去storage拿能量 (选填)
      * @param {*} _resource 拿取的resource种类
-     * @param {*} _resource 拿取的resource数量
+     * @param {*} _amount 拿取的resource数量
      * @returns {Boolean}
      */
     run: function ({ _creep, _container, _resource, _amount, isStorage }) {
