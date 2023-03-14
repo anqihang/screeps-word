@@ -46,6 +46,9 @@ import { tower } from "./structure/structure.tower";
 //config
 // import role_config from "./creeps.config.json";
 import rooms_config from "./config/rooms.config.json";
+var Resources = {
+    "RESOURCE_KEANIUM": RESOURCE_KEANIUM
+}
 /**
  * @description 对象类型的配置 {w41s22:{roomName}}
  */
@@ -295,7 +298,8 @@ export const loop = function () {
                     f_spawnCreep(room, role);
                 }
                 //采矿-矿有资源时孵化
-                else if (role.name == "mineralharvester" && Game.rooms[room.roomName].find(FIND_MINERALS)[0].mineralAmount > 0) {
+                else if (role.name == "mineralharvester" && Game.rooms[room.roomName].find(FIND_MINERALS)[0].mineralAmount > 0 &&
+                    Game.rooms[room.roomName].storage.store.getCapacity(Resources[room.resource]) < 400000) {
                     f_spawnCreep(room, role);
                 }
                 //外能量-有外房间时孵化
@@ -386,7 +390,8 @@ export const loop = function () {
                                     //大于容量会停止widthdraw
                                     _amount: 100,
                                 });
-                            } else {
+                            }
+                            else if (Game.rooms[room].terminal.store.getUsedCapacity(__resource) < 200000 && Game.rooms[room].storage.store.getUsedCapacity(__resource) > 100000) {
                                 customer.run({
                                     _creep,
                                     _target: _creep.room.terminal,
@@ -397,6 +402,20 @@ export const loop = function () {
                                     _amount: 100,
                                 });
                             }
+                            else {
+                                let storage = Game.rooms[room].storage;
+                                let links = Game.rooms[room].lookForAtArea(LOOK_STRUCTURES, storage.pos.y - 2, storage.pos.x - 2, storage.pos.y + 2, storage.pos.x + 2, true)
+                                    .filter((item) => item.structure.structureType == "link");
+                                customer.run({
+                                    _creep,
+                                    _target: _creep.room.terminal,
+                                    _origin: links[0].structure,
+                                    _method: "transfer",
+                                    _resource: RESOURCE_ENERGY,
+                                    //大于容量会停止widthdraw
+                                    _amount: 100,
+                                });
+                            };
                         }
                         break;
                     //扩张
